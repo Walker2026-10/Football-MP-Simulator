@@ -1,7 +1,7 @@
 // src/engines/trophyEngine.ts
 
 import { v4 as uuidv4 } from 'uuid';
-import { Club, Player, Honor, Trophy } from '@/types/game';
+import { Club, Player, Honor, Trophy, LeagueTableEntry as LeagueTableEntryType } from '@/types/game';
 
 // ============================================================
 // INTERFACES (exportadas para uso externo)
@@ -20,8 +20,8 @@ export interface TeamTrophy {
  * Representa um prémio individual atribuído a um jogador.
  */
 export interface IndividualAward {
-  awardName: string;     // ex: 'Ballon d\'Or', 'Golden Boy', 'Golden Boot', 'Playmaker of the Year'
-  winnerId: string;      // ID do jogador vencedor
+  awardName: string;
+  winnerId: string;
   winnerName: string;
   season: string;
 }
@@ -74,11 +74,11 @@ export function evaluateLeagueWinner(
     const gdA = a.goalsFor - a.goalsAgainst;
     const gdB = b.goalsFor - b.goalsAgainst;
     if (gdA !== gdB) return gdB - gdA;
-    return b.goalsFor - a.goalsFor; // mais golos marcados
+    return b.goalsFor - a.goalsFor;
   });
 
   const championEntry = sorted[0];
-  const runnerUpEntry = sorted[1] || sorted[0]; // se só houver um, repete
+  const runnerUpEntry = sorted[1] || sorted[0];
 
   const champion = clubs.find(c => c.id === championEntry.clubId);
   const runnerUp = clubs.find(c => c.id === runnerUpEntry.clubId);
@@ -96,7 +96,6 @@ export function evaluateLeagueWinner(
  * @returns Objeto SeasonAwards com os vencedores (ou null se não houver candidatos)
  */
 export function calculateSeasonAwards(allPlayers: Player[], season: string): SeasonAwards {
-  // Filtrar jogadores que tenham pelo menos 1 jogo disputado
   const eligible = allPlayers.filter(p => p.stats.matchesPlayed > 0);
 
   if (eligible.length === 0) {
@@ -108,7 +107,7 @@ export function calculateSeasonAwards(allPlayers: Player[], season: string): Sea
     };
   }
 
-  // 1. Ballon d'Or: melhor jogador do ano (baseado em overall + contribuições)
+  // 1. Ballon d'Or
   const bestOverall = eligible.reduce((best, current) => {
     const score = current.overall + (current.stats.goals * 0.3) + (current.stats.assists * 0.2) + (current.stats.averageRating * 0.5);
     const bestScore = best.overall + (best.stats.goals * 0.3) + (best.stats.assists * 0.2) + (best.stats.averageRating * 0.5);
@@ -122,7 +121,7 @@ export function calculateSeasonAwards(allPlayers: Player[], season: string): Sea
     season,
   };
 
-  // 2. Golden Boy: melhor jogador com 21 anos ou menos
+  // 2. Golden Boy
   const youngPlayers = eligible.filter(p => p.age <= 21);
   let goldenBoy: IndividualAward | null = null;
   if (youngPlayers.length > 0) {
@@ -140,7 +139,7 @@ export function calculateSeasonAwards(allPlayers: Player[], season: string): Sea
     };
   }
 
-  // 3. Golden Boot: mais golos
+  // 3. Golden Boot
   const topScorer = eligible.reduce((best, current) => {
     return current.stats.goals > best.stats.goals ? current : best;
   }, eligible[0]);
@@ -152,7 +151,7 @@ export function calculateSeasonAwards(allPlayers: Player[], season: string): Sea
     season,
   };
 
-  // 4. Playmaker do Ano: mais assistências
+  // 4. Playmaker
   const topAssist = eligible.reduce((best, current) => {
     return current.stats.assists > best.stats.assists ? current : best;
   }, eligible[0]);
@@ -176,10 +175,10 @@ export function calculateSeasonAwards(allPlayers: Player[], season: string): Sea
  * Regista um troféu ou prémio individual no histórico de um jogador,
  * atualizando o seu valor de mercado e moral.
  * @param player - O jogador a ser agraciado
- * @param trophyName - Nome do troféu/prémio (ex: 'Ballon d\'Or', 'Premier League')
- * @param season - Época (ex: '2026/2027')
+ * @param trophyName - Nome do troféu/prémio
+ * @param season - Época
  * @param isIndividual - Se é um prémio individual (true) ou de equipa (false)
- * @returns O jogador atualizado com o novo registo
+ * @returns O jogador atualizado
  */
 export function awardPlayerTrophy(
   player: Player,
@@ -187,15 +186,12 @@ export function awardPlayerTrophy(
   season: string,
   isIndividual: boolean = true
 ): Player {
-  // Clonar o jogador para não modificar o original
   const updatedPlayer = { ...player };
 
-  // Inicializar histórico de honras se não existir
   if (!updatedPlayer.honors) {
     updatedPlayer.honors = [];
   }
 
-  // Adicionar o troféu com tipo explícito
   const honor: Honor = {
     name: trophyName,
     season,
@@ -203,7 +199,6 @@ export function awardPlayerTrophy(
   };
   updatedPlayer.honors.push(honor);
 
-  // Atualizar valor de mercado (bónus de 10% a 30% consoante o prestígio)
   let bonusFactor = 0.1;
   if (trophyName.includes('Ballon d\'Or') || trophyName.includes('Golden Boy')) {
     bonusFactor = 0.3;
@@ -212,20 +207,19 @@ export function awardPlayerTrophy(
   }
   updatedPlayer.marketValue = Math.round(updatedPlayer.marketValue * (1 + bonusFactor) / 1000) * 1000;
 
-  // Aumentar moral e felicidade
   updatedPlayer.sims.happiness = Math.min(100, updatedPlayer.sims.happiness + 10);
-  updatedPlayer.sims.morale = 'Excelente'; // sobe para o máximo
+  updatedPlayer.sims.morale = 'Excelente';
 
   return updatedPlayer;
 }
 
 /**
- * Regista um troféu coletivo (para o clube) - função auxiliar.
+ * Regista um troféu coletivo (para o clube).
  * @param club - O clube
  * @param trophyName - Nome do troféu
  * @param season - Época
  * @param category - Categoria do troféu
- * @returns O clube atualizado (com histórico de troféus se existir)
+ * @returns O clube atualizado
  */
 export function awardClubTrophy(
   club: Club,
@@ -233,7 +227,7 @@ export function awardClubTrophy(
   season: string,
   category: 'league' | 'cup' | 'continental' | 'national'
 ): Club {
-  // Inicializar histórico de troféus no clube se não existir
+  // Garantir que a lista de troféus existe
   if (!club.trophies) {
     club.trophies = [];
   }
@@ -245,11 +239,11 @@ export function awardClubTrophy(
   };
   club.trophies.push(teamTrophy);
 
-  // Aumentar reputação do clube
+  // Aumentar reputação
   const reputationBoost = category === 'continental' ? 10 : (category === 'league' ? 5 : 3);
   club.reputation = Math.min(100, club.reputation + reputationBoost);
 
-  // Bónus financeiro por troféu
+  // Bónus financeiro
   const bonus = category === 'continental' ? 5000000 : (category === 'league' ? 2000000 : 1000000);
   club.budget += bonus;
 
