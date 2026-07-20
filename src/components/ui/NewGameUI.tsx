@@ -18,7 +18,6 @@ import {
   Crown,
   Star,
   Zap,
-  Gamepad2,
   MoveRight,
 } from 'lucide-react';
 
@@ -33,7 +32,7 @@ interface NewGameUIProps {
   isLoading?: boolean;
 }
 
-// Mapeamento de bandeiras para emojis (simplificado)
+// Mapeamento de bandeiras para emojis
 const flagEmojis: Record<string, string> = {
   Portugal: '🇵🇹',
   Brasil: '🇧🇷',
@@ -43,20 +42,6 @@ const flagEmojis: Record<string, string> = {
   França: '🇫🇷',
   Itália: '🇮🇹',
   Argentina: '🇦🇷',
-};
-
-// Geração de overall com base na posição (simulação)
-const generateOverall = (position: string): number => {
-  const base = 55 + Math.floor(Math.random() * 15); // 55-70
-  const bonus = {
-    'Guarda-Redes': 5,
-    'Defesa Central': 4,
-    Lateral: 3,
-    Médio: 2,
-    Extremo: 3,
-    Avançado: 5,
-  };
-  return Math.min(75, base + (bonus[position as keyof typeof bonus] || 0));
 };
 
 // Cores de posição para a carta
@@ -75,13 +60,21 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
   const [careerMode, setCareerMode] = useState<'player' | 'manager'>('player');
   const [nationality, setNationality] = useState('Portugal');
 
-  // Overall dinâmico (baseado na posição e nome, para dar consistência)
+  // Overall dinâmico para a carta
   const overall = useMemo(() => {
-    if (!playerName) return 0;
-    return generateOverall(position);
+    if (!playerName) return '??';
+    const base = 55 + Math.floor(Math.random() * 15);
+    const bonus: Record<string, number> = {
+      'Guarda-Redes': 5,
+      'Defesa Central': 4,
+      Lateral: 3,
+      Médio: 2,
+      Extremo: 3,
+      Avançado: 5,
+    };
+    return Math.min(75, base + (bonus[position] || 0));
   }, [playerName, position]);
 
-  // Bandeira emoji
   const flagEmoji = flagEmojis[nationality] || '🌍';
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -96,28 +89,21 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-dark-bg select-none">
       {/* ============================================================
-          FUNDO IMERSIVO (EA FC STYLE)
+          FUNDO IMERSIVO
       ============================================================ */}
       <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card/90 to-emerald-900/20" />
-
-      {/* Glow neon */}
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#00ff87]/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#00e5ff]/10 rounded-full blur-3xl animate-pulse delay-700" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff87]/5 rounded-full blur-3xl" />
-
-      {/* Padrão de relvado / linhas diagonais (mais forte) */}
-      <div className="absolute inset-0 opacity-[0.07] pointer-events-none">
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="diagonal" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
-              <line x1="0" y1="0" x2="60" y2="60" stroke="#ffffff" strokeWidth="1.5" opacity="0.5" />
+            <pattern id="diag" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+              <line x1="0" y1="0" x2="60" y2="60" stroke="#ffffff" strokeWidth="1.5" opacity="0.3" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#diagonal)" />
+          <rect width="100%" height="100%" fill="url(#diag)" />
         </svg>
       </div>
-
-      {/* Vinheta */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
       {/* ============================================================
@@ -140,14 +126,14 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
       {/* ============================================================
           CONTEÚDO PRINCIPAL
       ============================================================ */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 md:px-10 pt-20 pb-8">
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+      <div className="absolute inset-0 z-10 flex items-center justify-center px-6 md:px-10 pt-20 pb-8">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
 
           {/* ============================================================
-              LADO ESQUERDO - SELEÇÃO DE MODO (CARDS GIGANTES)
+              COLUNA ESQUERDA (3/5) - CARDS DE MODO
           ============================================================ */}
-          <div className="flex-1 w-full lg:w-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight">
+          <div className="lg:col-span-3 space-y-6">
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
               <span className="bg-gradient-to-r from-[#00ff87] to-[#00e5ff] bg-clip-text text-transparent">
                 ESCOLHE O TEU CAMINHO
               </span>
@@ -159,7 +145,7 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                 type="button"
                 onClick={() => setCareerMode('player')}
                 className={`
-                  group relative p-8 rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden
+                  group relative p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden
                   ${careerMode === 'player'
                     ? 'border-[#00ff87] bg-[#00ff87]/10 shadow-[0_0_40px_rgba(0,255,135,0.15)]'
                     : 'border-dark-border/40 bg-dark-card/20 backdrop-blur-sm hover:border-[#00ff87]/50 hover:bg-dark-card/30'
@@ -201,7 +187,7 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                 type="button"
                 onClick={() => setCareerMode('manager')}
                 className={`
-                  group relative p-8 rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden
+                  group relative p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden
                   ${careerMode === 'manager'
                     ? 'border-[#00e5ff] bg-[#00e5ff]/10 shadow-[0_0_40px_rgba(0,229,255,0.15)]'
                     : 'border-dark-border/40 bg-dark-card/20 backdrop-blur-sm hover:border-[#00e5ff]/50 hover:bg-dark-card/30'
@@ -241,22 +227,20 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
           </div>
 
           {/* ============================================================
-              LADO DIREITO - CARTA DE JOGADOR DINÂMICA
+              COLUNA DIREITA (2/5) - CARTA DINÂMICA + FORMULÁRIO
           ============================================================ */}
-          <div className="w-full lg:w-[340px] flex-shrink-0 flex flex-col gap-6">
-            {/* Preview da Carta EA FC Style */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Carta de Jogador (EA FC Style) */}
             <div className="relative bg-dark-card/60 backdrop-blur-xl border border-dark-border/40 rounded-3xl p-6 shadow-2xl shadow-black/40 overflow-hidden">
-              {/* Brilho de fundo da carta */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#00ff87]/5 via-transparent to-transparent" />
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#00ff87]/10 rounded-full blur-2xl" />
 
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold text-gray-400 tracking-widest">CARTA DE JOGADOR</span>
                   <span className="text-xs font-mono text-[#00ff87]/60">#2026</span>
                 </div>
 
-                {/* Corpo da carta */}
                 <div className={`
                   relative rounded-xl p-4 bg-gradient-to-br ${positionColors[position] || 'from-gray-600 to-gray-800'} shadow-lg
                   ${!playerName ? 'opacity-60' : ''}
@@ -265,7 +249,7 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                   <div className="relative z-10 text-white">
                     <div className="flex items-center justify-between">
                       <span className="text-4xl font-black tracking-tight">
-                        {overall || '?'}
+                        {typeof overall === 'number' ? overall : '??'}
                       </span>
                       <span className="text-2xl">{flagEmoji}</span>
                     </div>
@@ -284,42 +268,38 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                     <div className="mt-3 grid grid-cols-2 gap-1 text-xs">
                       <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
                         <span>Ritmo</span>
-                        <span className="font-bold">{Math.min(99, overall + 10)}</span>
+                        <span className="font-bold">{typeof overall === 'number' ? Math.min(99, overall + 10) : '--'}</span>
                       </div>
                       <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
                         <span>Remate</span>
-                        <span className="font-bold">{Math.min(99, overall + 5)}</span>
+                        <span className="font-bold">{typeof overall === 'number' ? Math.min(99, overall + 5) : '--'}</span>
                       </div>
                       <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
                         <span>Passe</span>
-                        <span className="font-bold">{Math.min(99, overall + 8)}</span>
+                        <span className="font-bold">{typeof overall === 'number' ? Math.min(99, overall + 8) : '--'}</span>
                       </div>
                       <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
                         <span>Defesa</span>
-                        <span className="font-bold">{Math.min(99, overall - 5)}</span>
+                        <span className="font-bold">{typeof overall === 'number' ? Math.min(99, overall - 5) : '--'}</span>
                       </div>
                     </div>
-                    {/* Badge Sub-15 */}
                     <div className="mt-2 text-[10px] font-bold text-white/50 uppercase tracking-wider">
                       🔹 PROMESSA SUB-15
                     </div>
                   </div>
                 </div>
 
-                {/* Rodapé da carta */}
                 <div className="mt-3 flex items-center justify-between text-[10px] text-gray-500">
                   <span className="flex items-center gap-1">
                     <Star className="w-3 h-3 text-gold-fc fill-gold-fc/50" />
-                    Potencial: {Math.min(99, overall + 20)}
+                    Potencial: {typeof overall === 'number' ? Math.min(99, overall + 20) : '--'}
                   </span>
                   <span>Football MP</span>
                 </div>
               </div>
             </div>
 
-            {/* ============================================================
-                FORMULÁRIO ESTILIZADO (bilhete de identidade)
-            ============================================================ */}
+            {/* Formulário de Dados do Jogador */}
             <div className="bg-dark-card/40 backdrop-blur-sm border border-dark-border/30 rounded-2xl p-6 shadow-lg">
               <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
                 Dados do Jogador
@@ -363,7 +343,7 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                   </div>
                 </div>
 
-                {/* Posição */}
+                {/* Posição (apenas para modo jogador) */}
                 {careerMode === 'player' && (
                   <div>
                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
@@ -386,7 +366,7 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
               </div>
             </div>
 
-            {/* Botão AVANÇAR (canto inferior direito) */}
+            {/* Botão Avançar */}
             <div className="flex justify-end">
               <button
                 type="button"
