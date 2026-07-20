@@ -1,17 +1,18 @@
 // src/engines/trophyEngine.ts
 
-import { Club, Player } from '@/types/game';
+import { v4 as uuidv4 } from 'uuid';
+import { Club, Player, Honor, Trophy } from '@/types/game';
 
 // ============================================================
-// INTERFACES (estruturas de dados para troféus e prémios)
+// INTERFACES (exportadas para uso externo)
 // ============================================================
 
 /**
  * Representa um troféu/ título conquistado por um clube.
  */
-export interface Trophy {
-  name: string;          // ex: 'Premier League', 'Champions League'
-  season: string;        // ex: '2026/2027'
+export interface TeamTrophy {
+  name: string;
+  season: string;
   category: 'league' | 'cup' | 'continental' | 'national';
 }
 
@@ -36,7 +37,7 @@ export interface SeasonAwards {
 }
 
 /**
- * Interface para uma entrada na tabela classificativa da liga.
+ * Interface para uma entrada na tabela classificativa da liga (usada em evaluateLeagueWinner).
  */
 export interface LeagueTableEntry {
   clubId: string;
@@ -194,11 +195,11 @@ export function awardPlayerTrophy(
     updatedPlayer.honors = [];
   }
 
-  // Adicionar o troféu
-  const honor = {
+  // Adicionar o troféu com tipo explícito
+  const honor: Honor = {
     name: trophyName,
     season,
-    type: isIndividual ? 'individual' : 'team',
+    type: isIndividual ? ('individual' as const) : ('team' as const),
   };
   updatedPlayer.honors.push(honor);
 
@@ -215,8 +216,42 @@ export function awardPlayerTrophy(
   updatedPlayer.sims.happiness = Math.min(100, updatedPlayer.sims.happiness + 10);
   updatedPlayer.sims.morale = 'Excelente'; // sobe para o máximo
 
-  // Aumentar reputação implícita (aqui apenas um log, mas poderia ser usado para outras mecânicas)
-  // Não temos campo de reputação no Player, mas podemos adicionar um futuro.
-
   return updatedPlayer;
+}
+
+/**
+ * Regista um troféu coletivo (para o clube) - função auxiliar.
+ * @param club - O clube
+ * @param trophyName - Nome do troféu
+ * @param season - Época
+ * @param category - Categoria do troféu
+ * @returns O clube atualizado (com histórico de troféus se existir)
+ */
+export function awardClubTrophy(
+  club: Club,
+  trophyName: string,
+  season: string,
+  category: 'league' | 'cup' | 'continental' | 'national'
+): Club {
+  // Inicializar histórico de troféus no clube se não existir
+  if (!club.trophies) {
+    club.trophies = [];
+  }
+
+  const teamTrophy: TeamTrophy = {
+    name: trophyName,
+    season,
+    category,
+  };
+  club.trophies.push(teamTrophy);
+
+  // Aumentar reputação do clube
+  const reputationBoost = category === 'continental' ? 10 : (category === 'league' ? 5 : 3);
+  club.reputation = Math.min(100, club.reputation + reputationBoost);
+
+  // Bónus financeiro por troféu
+  const bonus = category === 'continental' ? 5000000 : (category === 'league' ? 2000000 : 1000000);
+  club.budget += bonus;
+
+  return club;
 }
