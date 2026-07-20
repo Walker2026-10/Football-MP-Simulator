@@ -2,9 +2,8 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Gamepad2,
   Play,
   Save,
   Settings,
@@ -12,7 +11,6 @@ import {
   Sparkles,
   Trophy,
   Users,
-  Goal,
   ArrowRight,
   Circle,
   Zap,
@@ -29,7 +27,6 @@ import {
   Lock,
   Mail,
   LogOut,
-  CheckCircle,
   X,
 } from 'lucide-react';
 
@@ -40,17 +37,10 @@ interface MainMenuUIProps {
 }
 
 // ============================================================
-// COMPONENTE DE AUTENTICAÇÃO (MODAL)
+// MODAL DE AUTENTICAÇÃO (com design consistente)
 // ============================================================
 
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onLoginSuccess: (username: string) => void;
-  onRegisterSuccess: (username: string) => void;
-}
-
-function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthModalProps) {
+function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: any) {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -59,7 +49,6 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Resetar estado ao fechar
   useEffect(() => {
     if (!isOpen) {
       setError(null);
@@ -75,32 +64,16 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-
-    // Simular atraso de rede
     setTimeout(() => {
       try {
         const users = JSON.parse(localStorage.getItem('football_mp_users') || '{}');
         const user = users[username];
-        if (!user) {
-          setError('Utilizador não encontrado.');
-          setIsLoading(false);
-          return;
-        }
-        if (user.password !== password) {
-          setError('Palavra-passe incorreta.');
-          setIsLoading(false);
-          return;
-        }
-        // Sucesso
+        if (!user) { setError('Utilizador não encontrado.'); setIsLoading(false); return; }
+        if (user.password !== password) { setError('Palavra-passe incorreta.'); setIsLoading(false); return; }
         localStorage.setItem('football_mp_session', JSON.stringify({ username }));
         onLoginSuccess(username);
         onClose();
-      } catch (err) {
-        setError('Erro ao iniciar sessão.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
+      } catch (err) { setError('Erro ao iniciar sessão.'); } finally { setIsLoading(false); }
     }, 600);
   };
 
@@ -108,46 +81,19 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-
     setTimeout(() => {
       try {
-        if (!username.trim() || !email.trim() || !password.trim()) {
-          setError('Todos os campos são obrigatórios.');
-          setIsLoading(false);
-          return;
-        }
-        if (password !== confirmPassword) {
-          setError('As palavras-passe não coincidem.');
-          setIsLoading(false);
-          return;
-        }
-        if (password.length < 4) {
-          setError('A palavra-passe deve ter pelo menos 4 caracteres.');
-          setIsLoading(false);
-          return;
-        }
-
+        if (!username.trim() || !email.trim() || !password.trim()) { setError('Todos os campos são obrigatórios.'); setIsLoading(false); return; }
+        if (password !== confirmPassword) { setError('As palavras-passe não coincidem.'); setIsLoading(false); return; }
+        if (password.length < 4) { setError('A palavra-passe deve ter pelo menos 4 caracteres.'); setIsLoading(false); return; }
         const users = JSON.parse(localStorage.getItem('football_mp_users') || '{}');
-        if (users[username]) {
-          setError('Nome de utilizador já existe.');
-          setIsLoading(false);
-          return;
-        }
-
-        // Guardar novo utilizador
+        if (users[username]) { setError('Nome de utilizador já existe.'); setIsLoading(false); return; }
         users[username] = { email, password, createdAt: new Date().toISOString() };
         localStorage.setItem('football_mp_users', JSON.stringify(users));
-
-        // Iniciar sessão automaticamente
         localStorage.setItem('football_mp_session', JSON.stringify({ username }));
         onRegisterSuccess(username);
         onClose();
-      } catch (err) {
-        setError('Erro ao criar conta.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
+      } catch (err) { setError('Erro ao criar conta.'); } finally { setIsLoading(false); }
     }, 600);
   };
 
@@ -155,58 +101,36 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-      {/* Fundo com luzes neon */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-500/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       </div>
-
       <div className="relative w-full max-w-md bg-dark-card/80 backdrop-blur-xl border border-dark-border/60 rounded-3xl shadow-2xl overflow-hidden">
-        {/* Cabeçalho do modal com botão fechar */}
         <div className="flex items-center justify-between px-6 pt-6">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-emerald-400" />
+            <Trophy className="w-5 h-5 text-red-400" />
             <span className="text-sm font-bold text-white/60 uppercase tracking-wider">
               {activeTab === 'login' ? 'Entrar' : 'Criar Conta'}
             </span>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
-          >
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
-
-        {/* Abas */}
         <div className="flex border-b border-dark-border/40 mx-6 mt-4">
           <button
             onClick={() => setActiveTab('login')}
-            className={`
-              flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-all
-              ${activeTab === 'login'
-                ? 'text-emerald-400 border-b-2 border-emerald-400'
-                : 'text-gray-400 hover:text-white'
-              }
-            `}
+            className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-all ${activeTab === 'login' ? 'text-red-400 border-b-2 border-red-400' : 'text-gray-400 hover:text-white'}`}
           >
             Iniciar Sessão
           </button>
           <button
             onClick={() => setActiveTab('register')}
-            className={`
-              flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-all
-              ${activeTab === 'register'
-                ? 'text-emerald-400 border-b-2 border-emerald-400'
-                : 'text-gray-400 hover:text-white'
-              }
-            `}
+            className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-all ${activeTab === 'register' ? 'text-red-400 border-b-2 border-red-400' : 'text-gray-400 hover:text-white'}`}
           >
             Criar Conta
           </button>
         </div>
-
-        {/* Formulário */}
         <div className="p-6">
           {error && (
             <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm flex items-center gap-2">
@@ -214,129 +138,45 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
               {error}
             </div>
           )}
-
           <form onSubmit={activeTab === 'login' ? handleLogin : handleRegister} className="space-y-4">
-            {/* Username */}
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                Nome de Utilizador
-              </label>
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Nome de Utilizador</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value.trim())}
-                  placeholder="EX: JOGADORPRO"
-                  className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
-                  required
-                />
+                <input type="text" value={username} onChange={(e) => setUsername(e.target.value.trim())} placeholder="EX: JOGADORPRO" className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all" required />
               </div>
             </div>
-
-            {/* Email (apenas registo) */}
             {activeTab === 'register' && (
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Email
-                </label>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value.trim())}
-                    placeholder="EX: JOGADOR@EMAIL.COM"
-                    className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
-                    required
-                  />
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value.trim())} placeholder="EX: JOGADOR@EMAIL.COM" className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all" required />
                 </div>
               </div>
             )}
-
-            {/* Palavra-passe */}
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                Palavra-passe
-              </label>
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Palavra-passe</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
-                  required
-                />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all" required />
               </div>
             </div>
-
-            {/* Confirmar palavra-passe (apenas registo) */}
             {activeTab === 'register' && (
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Confirmar Palavra-passe
-                </label>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Confirmar Palavra-passe</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
-                    required
-                  />
+                  <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all" required />
                 </div>
               </div>
             )}
-
-            {/* Botão de submissão */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`
-                w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300
-                ${!isLoading
-                  ? 'bg-emerald-500 text-black hover:brightness-110 hover:scale-[1.02] shadow-[0_0_30px_rgba(0,255,135,0.2)]'
-                  : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
-                }
-              `}
-            >
-              {isLoading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-black/30 border-t-transparent" />
-              ) : (
-                <>
-                  {activeTab === 'login' ? 'Entrar no Campo' : 'Criar Conta de Jogador'}
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
+            <button type="submit" disabled={isLoading} className={`w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300 ${!isLoading ? 'bg-red-500 text-black hover:brightness-110 hover:scale-[1.02] shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'}`}>
+              {isLoading ? <div className="animate-spin rounded-full h-5 w-5 border-2 border-black/30 border-t-transparent" /> : <>{activeTab === 'login' ? 'Entrar no Campo' : 'Criar Conta de Jogador'} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></>}
             </button>
           </form>
-
           <div className="mt-4 text-center text-[10px] text-gray-500">
-            {activeTab === 'login' ? (
-              <>
-                Não tens conta?{' '}
-                <button
-                  onClick={() => setActiveTab('register')}
-                  className="text-emerald-400 hover:underline font-bold"
-                >
-                  Criar Conta
-                </button>
-              </>
-            ) : (
-              <>
-                Já tens conta?{' '}
-                <button
-                  onClick={() => setActiveTab('login')}
-                  className="text-emerald-400 hover:underline font-bold"
-                >
-                  Iniciar Sessão
-                </button>
-              </>
-            )}
+            {activeTab === 'login' ? <>Não tens conta? <button onClick={() => setActiveTab('register')} className="text-red-400 hover:underline font-bold">Criar Conta</button></> : <>Já tens conta? <button onClick={() => setActiveTab('login')} className="text-red-400 hover:underline font-bold">Iniciar Sessão</button></>}
           </div>
         </div>
       </div>
@@ -348,17 +188,11 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
 // COMPONENTE PRINCIPAL
 // ============================================================
 
-export function MainMenuUI({
-  onStartNewGame,
-  onLoadGame,
-  hasSavedGame,
-}: MainMenuUIProps) {
-  // Estado de autenticação
+export function MainMenuUI({ onStartNewGame, onLoadGame, hasSavedGame }: MainMenuUIProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Verificar sessão ao montar
   useEffect(() => {
     const session = localStorage.getItem('football_mp_session');
     if (session) {
@@ -368,30 +202,14 @@ export function MainMenuUI({
           setIsLoggedIn(true);
           setCurrentUser(data.username);
         }
-      } catch (e) {
-        // ignore
-      }
+      } catch (e) { /* ignore */ }
     }
   }, []);
 
-  // Handlers de autenticação
-  const handleLoginSuccess = (username: string) => {
-    setIsLoggedIn(true);
-    setCurrentUser(username);
-  };
+  const handleLoginSuccess = (username: string) => { setIsLoggedIn(true); setCurrentUser(username); };
+  const handleRegisterSuccess = (username: string) => { setIsLoggedIn(true); setCurrentUser(username); };
+  const handleLogout = () => { localStorage.removeItem('football_mp_session'); setIsLoggedIn(false); setCurrentUser(null); };
 
-  const handleRegisterSuccess = (username: string) => {
-    setIsLoggedIn(true);
-    setCurrentUser(username);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('football_mp_session');
-    setIsLoggedIn(false);
-    setCurrentUser(null);
-  };
-
-  // Handler para "Nova Carreira" com verificação de login
   const handleStartNewGame = () => {
     if (!isLoggedIn) {
       setIsAuthModalOpen(true);
@@ -402,39 +220,34 @@ export function MainMenuUI({
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-dark-bg select-none">
+
       {/* ============================================================
-          FUNDO DINÂMICO (ECRÃ INTEIRO)
+          FUNDO DINÂMICO (ECRÃ INTEIRO) - ESTILO FUTEBOL
       ============================================================ */}
-
-      {/* Gradiente base profundo */}
-      <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card/90 to-dark-bg" />
-
-      {/* Luzes de estádio (stadium floodlights) - desfocadas nos cantos superiores */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute -top-20 -right-20 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse delay-1000" />
+      <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card/90 to-red-900/20" />
+      <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse delay-1000" />
       <div className="absolute top-1/3 -left-40 w-80 h-80 bg-emerald-400/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-gradient-to-t from-emerald-500/5 via-transparent to-transparent" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-gradient-to-t from-red-500/5 via-transparent to-transparent" />
 
-      {/* Padrão de relvado com linhas táticas (SVG inline) */}
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
+      {/* Padrão de relvado com linhas táticas (mais visível) */}
+      <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="pitch" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-              <rect width="80" height="80" fill="none" stroke="#ffffff" strokeWidth="0.5" opacity="0.3" />
+              <rect width="80" height="80" fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.4" />
             </pattern>
             <pattern id="lines" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="40" y2="40" stroke="#ffffff" strokeWidth="0.3" opacity="0.15" />
-              <line x1="40" y1="0" x2="0" y2="40" stroke="#ffffff" strokeWidth="0.3" opacity="0.15" />
+              <line x1="0" y1="0" x2="40" y2="40" stroke="#ffffff" strokeWidth="0.5" opacity="0.2" />
+              <line x1="40" y1="0" x2="0" y2="40" stroke="#ffffff" strokeWidth="0.5" opacity="0.2" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#pitch)" />
           <rect width="100%" height="100%" fill="url(#lines)" />
-          <circle cx="50%" cy="50%" r="150" fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.15" />
-          <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#ffffff" strokeWidth="0.8" opacity="0.1" />
+          <circle cx="50%" cy="50%" r="150" fill="none" stroke="#ffffff" strokeWidth="1" opacity="0.2" />
+          <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#ffffff" strokeWidth="1" opacity="0.15" />
         </svg>
       </div>
-
-      {/* Gradiente de vinheta para dar profundidade */}
       <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent pointer-events-none" />
 
       {/* ============================================================
@@ -443,18 +256,15 @@ export function MainMenuUI({
       <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 md:px-12 py-4 bg-gradient-to-b from-black/50 to-transparent">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Trophy className="w-8 h-8 text-emerald-400" strokeWidth={1.5} />
+            <Trophy className="w-8 h-8 text-red-500" strokeWidth={1.5} />
             <span className="text-2xl md:text-3xl font-extrabold tracking-tight">
-              <span className="bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-200 bg-clip-text text-transparent">
-                FOOTBALL MP
-              </span>
+              <span className="bg-gradient-to-r from-red-400 via-red-300 to-blue-400 bg-clip-text text-transparent">FOOTBALL MP</span>
               <span className="text-white/60 font-light ml-1">26</span>
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-4 text-xs md:text-sm">
-          {/* Estado do motor */}
           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-300">
             <Server className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">ENGINE:</span>
@@ -462,41 +272,26 @@ export function MainMenuUI({
             <Circle className="w-2 h-2 fill-emerald-400 animate-pulse" />
           </span>
 
-          {/* Área de autenticação */}
           {isLoggedIn ? (
             <div className="flex items-center gap-3 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs">
+                <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xs">
                   {currentUser?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                <span className="text-xs font-bold text-white hidden sm:inline">
-                  @{currentUser}
-                </span>
-                <span className="text-[10px] text-emerald-400 font-bold uppercase hidden sm:inline">
-                  • Online
-                </span>
+                <span className="text-xs font-bold text-white hidden sm:inline">@{currentUser}</span>
+                <span className="text-[10px] text-emerald-400 font-bold uppercase hidden sm:inline">• Online</span>
               </div>
-              <button
-                onClick={handleLogout}
-                className="p-1 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-red-400"
-                title="Terminar Sessão"
-              >
+              <button onClick={handleLogout} className="p-1 rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-red-400" title="Terminar Sessão">
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <div className="flex gap-2">
-              <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 hover:border-emerald-400/50 hover:bg-emerald-500/10 transition-all duration-300"
-              >
+              <button onClick={() => setIsAuthModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-300 hover:border-red-400/50 hover:bg-red-500/10 transition-all duration-300">
                 <LogIn className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline font-medium">Entrar</span>
               </button>
-              <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-emerald-300 hover:bg-emerald-500/30 transition-all duration-300"
-              >
+              <button onClick={() => setIsAuthModalOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/20 border border-red-500/30 rounded-full text-red-300 hover:bg-red-500/30 transition-all duration-300">
                 <UserPlus className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline font-medium">Criar Conta</span>
               </button>
@@ -518,12 +313,11 @@ export function MainMenuUI({
               LADO ESQUERDO - BOTÕES (3 colunas)
           ============================================================ */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Título de impacto */}
             <div className="space-y-1 mb-4">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight">
                 <span className="text-white">SÊ A</span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-blue-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-300 to-blue-400">
                   PRÓXIMA LENDA
                 </span>
               </h1>
@@ -532,10 +326,10 @@ export function MainMenuUI({
               </p>
             </div>
 
-            {/* Botão principal - NOVA CARREIRA */}
+            {/* Botão principal - NOVA CARREIRA (vermelho FIFA) */}
             <button
               onClick={handleStartNewGame}
-              className="group relative w-full max-w-md flex items-center gap-4 px-8 py-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold text-xl md:text-2xl uppercase tracking-wider shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/60 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+              className="group relative w-full max-w-md flex items-center gap-4 px-8 py-5 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 text-white font-bold text-xl md:text-2xl uppercase tracking-wider shadow-2xl shadow-red-500/30 hover:shadow-red-500/60 hover:scale-[1.02] transition-all duration-300 overflow-hidden"
             >
               <span className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/40 shadow-lg" />
               <Play className="w-6 h-6 fill-current group-hover:scale-110 transition-transform" />
@@ -552,7 +346,7 @@ export function MainMenuUI({
                 className={`
                   w-full flex items-center gap-4 px-6 py-3.5 rounded-xl border transition-all duration-300
                   ${hasSavedGame
-                    ? 'border-dark-border/40 bg-dark-card/30 backdrop-blur-sm text-white hover:border-emerald-400/50 hover:bg-dark-card/50 hover:shadow-lg hover:shadow-emerald-500/5'
+                    ? 'border-dark-border/40 bg-dark-card/30 backdrop-blur-sm text-white hover:border-red-400/50 hover:bg-dark-card/50 hover:shadow-lg hover:shadow-red-500/5'
                     : 'border-dark-border/20 bg-dark-card/10 text-gray-500 cursor-not-allowed opacity-50'
                   }
                 `}
@@ -566,7 +360,7 @@ export function MainMenuUI({
 
               <button
                 onClick={() => alert('Definições em desenvolvimento')}
-                className="w-full flex items-center gap-4 px-6 py-3 rounded-xl border border-dark-border/20 bg-dark-card/10 backdrop-blur-sm text-gray-300 hover:border-emerald-400/30 hover:bg-dark-card/30 transition-all duration-300"
+                className="w-full flex items-center gap-4 px-6 py-3 rounded-xl border border-dark-border/20 bg-dark-card/10 backdrop-blur-sm text-gray-300 hover:border-red-400/30 hover:bg-dark-card/30 transition-all duration-300"
               >
                 <Settings className="w-5 h-5" />
                 <span className="font-medium text-base">Definições</span>
@@ -575,7 +369,7 @@ export function MainMenuUI({
 
               <button
                 onClick={() => alert('Créditos: Football MP Simulator 2026\nDesenvolvido com ❤️')}
-                className="w-full flex items-center gap-4 px-6 py-3 rounded-xl border border-dark-border/20 bg-dark-card/10 backdrop-blur-sm text-gray-300 hover:border-emerald-400/30 hover:bg-dark-card/30 transition-all duration-300"
+                className="w-full flex items-center gap-4 px-6 py-3 rounded-xl border border-dark-border/20 bg-dark-card/10 backdrop-blur-sm text-gray-300 hover:border-red-400/30 hover:bg-dark-card/30 transition-all duration-300"
               >
                 <Info className="w-5 h-5" />
                 <span className="font-medium text-base">Estatísticas & Créditos</span>
@@ -590,15 +384,15 @@ export function MainMenuUI({
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-dark-card/30 backdrop-blur-xl border border-dark-border/40 rounded-2xl p-6 shadow-2xl shadow-black/20">
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-5 h-5 text-emerald-400" />
+                <Sparkles className="w-5 h-5 text-red-400" />
                 <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
                   Destaques do Simulador
                 </h3>
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-bg/40 border border-dark-border/20 hover:border-emerald-400/20 transition-all">
-                  <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-bg/40 border border-dark-border/20 hover:border-red-400/20 transition-all">
+                  <div className="p-2 rounded-lg bg-red-500/10 text-red-400">
                     <Users className="w-5 h-5" />
                   </div>
                   <div>
@@ -607,7 +401,7 @@ export function MainMenuUI({
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-bg/40 border border-dark-border/20 hover:border-emerald-400/20 transition-all">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-bg/40 border border-dark-border/20 hover:border-red-400/20 transition-all">
                   <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
                     <Zap className="w-5 h-5" />
                   </div>
@@ -617,7 +411,7 @@ export function MainMenuUI({
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-bg/40 border border-dark-border/20 hover:border-emerald-400/20 transition-all">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-bg/40 border border-dark-border/20 hover:border-red-400/20 transition-all">
                   <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
                     <Crown className="w-5 h-5" />
                   </div>
@@ -627,10 +421,10 @@ export function MainMenuUI({
                   </div>
                 </div>
 
-                <div className="mt-2 p-3 rounded-xl bg-gradient-to-r from-emerald-500/5 to-blue-500/5 border border-emerald-500/10">
+                <div className="mt-2 p-3 rounded-xl bg-gradient-to-r from-red-500/5 to-blue-500/5 border border-red-500/10">
                   <div className="flex items-center justify-between text-xs text-gray-400">
                     <span className="flex items-center gap-1">
-                      <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                      <Activity className="w-3.5 h-3.5 text-red-400" />
                       Motor de Jogo v2.1
                     </span>
                     <span className="flex items-center gap-1">
@@ -646,10 +440,9 @@ export function MainMenuUI({
               </div>
             </div>
 
-            {/* Badge extra - "Pronto para Jogar" */}
             <div className="flex items-center justify-end gap-2 text-xs text-gray-500">
               <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
                 Sistema operacional
               </span>
               <span className="w-1 h-1 rounded-full bg-dark-border" />
@@ -660,7 +453,7 @@ export function MainMenuUI({
       </div>
 
       {/* ============================================================
-          FOOTER BAR - Atalhos de teclado (estilo consola)
+          FOOTER BAR
       ============================================================ */}
       <footer className="absolute bottom-0 left-0 right-0 z-20 flex items-center justify-between px-6 md:px-12 py-3 bg-gradient-to-t from-black/60 to-transparent">
         <div className="flex items-center gap-6 text-xs text-gray-400/70 font-mono">
