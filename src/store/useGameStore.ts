@@ -19,6 +19,9 @@ import {
   CareerMode,
   SimsData,
   Injury,
+  TransferOffer,
+  SponsorContract,
+  LifestyleItem,
 } from '@/types/game';
 
 // Data Loader
@@ -116,6 +119,13 @@ export interface GameStore {
   liveMatchState: any | null;
   isLoading: boolean;
   currentSeason: string;
+  currentDate: string; // <-- adicionado
+
+  // Métodos auxiliares
+  getPlayerById: (playerId: string) => Player | undefined;
+  getClubById: (clubId: string) => Club | undefined;
+  getCurrentPlayer: () => Player | null;
+  getCurrentClub: () => Club | null;
 
   // Ações
   startNewCareer: (
@@ -128,17 +138,13 @@ export interface GameStore {
   saveGame: () => void;
   advanceDay: () => Promise<void>;
   trainPlayer: (focusArea: keyof PlayerAttributes) => void;
-  buyLifestyleItem: (item: any) => { success: boolean; message: string };
+  buyLifestyleItem: (item: LifestyleItem) => { success: boolean; message: string };
   respondToPressConference: (questionId: string, optionIndex: number) => void;
   simulateLiveMatch: (homeTactics?: string, awayTactics?: string) => void;
   applyTacticalChange: (newMentality: 'DEFENSIVE' | 'BALANCED' | 'ATTACKING', forTeam: 'HOME' | 'AWAY') => void;
   processTransferOffer: (offerId: string, accept: boolean) => void;
   scoutPlayer: (playerId: string) => void;
   processLoanDeal: (playerId: string, borrowingClubId: string, terms: any) => void;
-  getPlayerById: (playerId: string) => Player | undefined;
-  getClubById: (clubId: string) => Club | undefined;
-  getCurrentPlayer: () => Player | null;
-  getCurrentClub: () => Club | null;
   resetGame: () => void;
 }
 
@@ -169,7 +175,7 @@ function generateFixtures(clubs: Club[], leagueId: string, season: string): Matc
           awayScore: 0,
           events: [],
           played: false,
-          matchDate: `${season}-09-01`, // placeholder
+          matchDate: `${season}-09-01`,
         });
         // Jogo de volta
         fixtures.push({
@@ -182,7 +188,7 @@ function generateFixtures(clubs: Club[], leagueId: string, season: string): Matc
           awayScore: 0,
           events: [],
           played: false,
-          matchDate: `${season}-12-01`, // placeholder
+          matchDate: `${season}-12-01`,
         });
       }
     }
@@ -212,6 +218,7 @@ export const useGameStore = create<GameStore>()(
       liveMatchState: null,
       isLoading: false,
       currentSeason: '2026/2027',
+      currentDate: '2026-09-01', // <-- adicionado
 
       // ============================================================
       // MÉTODOS AUXILIARES
@@ -329,6 +336,7 @@ export const useGameStore = create<GameStore>()(
           newsFeed: [],
           boardConfidence: 80,
           currentSeason: '2026/2027',
+          currentDate: '2026-09-01', // <-- definido
           isLoading: false,
         });
 
@@ -360,6 +368,7 @@ export const useGameStore = create<GameStore>()(
                 boardConfidence: state.boardConfidence || 80,
                 liveMatchState: state.liveMatchState || null,
                 currentSeason: state.currentSeason || '2026/2027',
+                currentDate: state.currentDate || '2026-09-01', // <-- carregar
                 isLoading: false,
               });
             }
@@ -385,6 +394,7 @@ export const useGameStore = create<GameStore>()(
           boardConfidence: state.boardConfidence,
           liveMatchState: state.liveMatchState,
           currentSeason: state.currentSeason,
+          currentDate: state.currentDate, // <-- salvar
         };
         localStorage.setItem('football-mp-simulator-save', JSON.stringify({ state: dataToSave }));
       },
@@ -403,6 +413,7 @@ export const useGameStore = create<GameStore>()(
           liveMatchState: null,
           isLoading: false,
           currentSeason: '2026/2027',
+          currentDate: '2026-09-01',
         });
       },
 
@@ -425,12 +436,13 @@ export const useGameStore = create<GameStore>()(
           newsFeed,
           boardConfidence,
           currentSeason,
+          currentDate,
         } = state;
 
         // 1. Avançar data
-        const currentDate = new Date(saveState.currentDate);
-        currentDate.setDate(currentDate.getDate() + 1);
-        const newDate = currentDate.toISOString().slice(0, 10);
+        const dateObj = new Date(currentDate);
+        dateObj.setDate(dateObj.getDate() + 1);
+        const newDate = dateObj.toISOString().slice(0, 10);
 
         // 2. Processar vida pessoal do jogador (se existir)
         let updatedPlayer = saveState.userPlayer;
@@ -503,7 +515,6 @@ export const useGameStore = create<GameStore>()(
 
             // Processar estatísticas do jogador (se participou)
             if (updatedPlayer) {
-              // O jogador pode ter jogado - verificar nos eventos
               const playerEvents = matchResult.events.filter(e =>
                 e.playerInvolvedName === updatedPlayer?.name
               );
@@ -610,7 +621,6 @@ export const useGameStore = create<GameStore>()(
           const { champions, europeanQualifications, relegated, promoted } = seasonResult;
 
           // Atualizar clubes (promovidos e despromovidos)
-          // Nota: numa implementação real, isto seria mais complexo
           const allClubsAfterSeason = [
             ...clubs.filter(c => !relegated.some(r => r.id === c.id)),
             ...promoted,
@@ -684,6 +694,7 @@ export const useGameStore = create<GameStore>()(
           newsFeed,
           boardConfidence,
           currentSeason,
+          currentDate: newDate, // <-- atualizar
           isLoading: false,
         });
 
@@ -742,7 +753,7 @@ export const useGameStore = create<GameStore>()(
       // COMPRA DE ITENS DE ESTILO DE VIDA
       // ============================================================
 
-      buyLifestyleItem: (item: any) => {
+      buyLifestyleItem: (item: LifestyleItem) => {
         const state = get();
         const player = state.getCurrentPlayer();
         if (!player) {
@@ -787,7 +798,6 @@ export const useGameStore = create<GameStore>()(
 
       respondToPressConference: (questionId: string, optionIndex: number) => {
         const state = get();
-        // Gerar perguntas com base no trigger
         const questions = generatePressConference('BIG_MATCH');
         const question = questions.find(q => q.id === questionId);
         if (!question) return;
@@ -795,11 +805,9 @@ export const useGameStore = create<GameStore>()(
         const option = question.options[optionIndex];
         if (!option) return;
 
-        // Aplicar impactos
         let newBoardConfidence = state.boardConfidence + option.boardImpact;
         newBoardConfidence = Math.min(100, Math.max(0, newBoardConfidence));
 
-        // Atualizar moral do jogador
         const player = state.getCurrentPlayer();
         if (player) {
           player.sims.happiness = Math.min(100, Math.max(0, player.sims.happiness + option.moralImpact));
@@ -822,22 +830,16 @@ export const useGameStore = create<GameStore>()(
         const homeClub = state.getCurrentClub();
         if (!homeClub) return;
 
-        // Procurar adversário (primeiro da lista)
         const awayClub = state.clubs.find(c => c.id !== homeClub.id);
         if (!awayClub) return;
 
-        // Inicializar jogo ao vivo
         const liveState = initLiveMatch(homeClub, awayClub, homeTactics, awayTactics);
         set({ liveMatchState: liveState });
 
-        // Simular 90 minutos (tick a tick)
         let currentState = liveState;
         for (let i = 0; i < 90; i++) {
           const { newState, generatedEvent } = tickLiveMatch(currentState);
           currentState = newState;
-          if (generatedEvent) {
-            // Atualizar estado com eventos
-          }
         }
 
         set({ liveMatchState: currentState });
@@ -860,8 +862,6 @@ export const useGameStore = create<GameStore>()(
       // ============================================================
 
       processTransferOffer: (offerId: string, accept: boolean) => {
-        // Implementação simplificada
-        // Na prática, teríamos uma lista de ofertas pendentes
         const state = get();
         state.saveState?.logs.push(
           accept ? 'Transferência aceite!' : 'Transferência rejeitada.'
@@ -878,7 +878,6 @@ export const useGameStore = create<GameStore>()(
         const target = state.getPlayerById(playerId);
         if (!target) return;
 
-        // Criar scout fictício
         const scout = {
           id: uuidv4(),
           name: 'Scout Principal',
@@ -928,6 +927,7 @@ export const useGameStore = create<GameStore>()(
         boardConfidence: state.boardConfidence,
         liveMatchState: state.liveMatchState,
         currentSeason: state.currentSeason,
+        currentDate: state.currentDate, // <-- persistir
       }),
     }
   )
