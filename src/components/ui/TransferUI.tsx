@@ -1,3 +1,4 @@
+
 // src/components/ui/TransferUI.tsx
 
 'use client';
@@ -67,6 +68,7 @@ interface TransferOffer {
   contractYears: number;
   loan: boolean;
   loanDuration?: number;
+  loanCoverage?: number;
   expiresAt: string;
   status: 'pending' | 'accepted' | 'rejected' | 'expired';
 }
@@ -597,8 +599,7 @@ export function TransferUI() {
                       <h4 className="font-medium text-white">{offer.toClubName}</h4>
                       <div className="text-sm text-gray-400 mt-1">
                         {offer.loan ? 'Empréstimo' : 'Transferência'} • {offer.transferFee.toLocaleString()} €
-                        // @ts-ignore
-                        {offer.loan && ` • Cobertura: ${(offer as any)?.loanCoverage || 50}%`}
+                        {offer.loan && ` • Cobertura: ${offer.loanCoverage ?? 50}%`}
                       </div>
                       <div className="text-sm text-gray-400">
                         Salário: {offer.offeredSalary.toLocaleString()} €/ano • {offer.contractYears} anos
@@ -792,4 +793,4 @@ export function TransferUI() {
       )}
     </div>
   );
-}
+          }
