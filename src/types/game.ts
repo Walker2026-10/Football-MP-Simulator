@@ -70,7 +70,7 @@ export interface Club {
   secondaryColor: string;
   manager?: any;
   recentResults?: string[];
-  trophies?: Trophy[];  // <-- adicionado
+  trophies?: Trophy[];
 }
 
 export interface Sub15Club {
@@ -184,7 +184,7 @@ export interface TransferOffer {
   contractYears: number;
   loan: boolean;
   loanDuration?: number;
-  loanCoverage?: number;   // <-- adicionado
+  loanCoverage?: number;   // <-- corrigido
   expiresAt: string;
   status: 'pending' | 'accepted' | 'rejected' | 'expired';
 }
