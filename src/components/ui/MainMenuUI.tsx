@@ -48,7 +48,17 @@ import {
 } from 'lucide-react';
 
 // ============================================================
-// TIPOS
+// INTERFACE DE PROPS (DEFINIDA ANTES DO COMPONENTE)
+// ============================================================
+
+export interface MainMenuUIProps {
+  onStartNewGame: () => void;
+  onLoadGame: () => void;
+  hasSavedGame: boolean;
+}
+
+// ============================================================
+// TIPOS ADICIONAIS
 // ============================================================
 
 interface AuthModalProps {
@@ -400,7 +410,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess, onRegisterSuccess }: AuthM
 }
 
 // ============================================================
-// COMPONENTE PRINCIPAL
+// COMPONENTE PRINCIPAL (exportado)
 // ============================================================
 
 export function MainMenuUI({ onStartNewGame, onLoadGame, hasSavedGame }: MainMenuUIProps) {
@@ -416,7 +426,6 @@ export function MainMenuUI({ onStartNewGame, onLoadGame, hasSavedGame }: MainMen
   const [volume, setVolume] = useState(70);
   const [brightness, setBrightness] = useState(100);
   const [quality, setQuality] = useState<'Alta' | 'Média' | 'Baixa'>('Alta');
-  const [weather, setWeather] = useState<'day' | 'night' | 'rain'>('day');
   const [serverStatus, setServerStatus] = useState<'online' | 'offline' | 'maintenance'>('online');
   const [loadingProgress, setLoadingProgress] = useState(0);
 
@@ -946,3 +955,5 @@ export function MainMenuUI({ onStartNewGame, onLoadGame, hasSavedGame }: MainMen
     </div>
   );
 }
+
+export default MainMenuUI;
