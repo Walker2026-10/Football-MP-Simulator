@@ -49,6 +49,8 @@ export interface Player {
   contractYears: number;  // anos restantes de contrato
   sims: SimsData;
   stats: PlayerStats;
+  potential: number;      // 1-99 – potencial máximo que pode atingir
+  growthRate: number;     // 0.5 a 2.0 – fator de evolução por temporada
 }
 
 export interface Club {
