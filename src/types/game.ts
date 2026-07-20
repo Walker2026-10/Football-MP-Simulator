@@ -53,7 +53,7 @@ export interface Player {
   growthRate: number;
   fitness?: number;
   injury?: Injury | null;
-  honors?: { name: string; season: string; type: 'individual' | 'team' }[];
+  honors?: Honor[];
 }
 
 export interface Club {
@@ -128,7 +128,7 @@ export interface SaveState {
 }
 
 // ============================================================
-// INTERFACES ADICIONAIS PARA COMPETIÇÕES, MEDIA E HISTÓRICO
+// INTERFACES ADICIONAIS
 // ============================================================
 
 export interface LeagueTableEntry {
@@ -165,10 +165,6 @@ export interface NewsItem {
   importance: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
-// ============================================================
-// INTERFACES PARA MOTORES DE TRANSFERÊNCIAS, LESÕES, ETC.
-// ============================================================
-
 export interface Injury {
   type: string;
   severity: 'Leve' | 'Moderada' | 'Grave';
@@ -187,7 +183,7 @@ export interface TransferOffer {
   contractYears: number;
   loan: boolean;
   loanDuration?: number;
-  loanCoverage?: number;   // percentagem de cobertura salarial (0-100)
+  loanCoverage?: number;
   expiresAt: string;
   status: 'pending' | 'accepted' | 'rejected' | 'expired';
 }
@@ -240,4 +236,16 @@ export interface LifestyleItem {
   monthlyMaintenance: number;
   statusBoost: number;
   reputationBoost: number;
+}
+
+export interface Honor {
+  name: string;
+  season: string;
+  type: 'individual' | 'team';
+}
+
+export interface Trophy {
+  name: string;
+  season: string;
+  category: 'league' | 'cup' | 'continental' | 'national';
 }
