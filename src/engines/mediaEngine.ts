@@ -1,23 +1,11 @@
 // src/engines/mediaEngine.ts
 
 import { v4 as uuidv4 } from 'uuid';
-import { Match, TransferOffer, Injury } from '@/types/game';
+import { Match, TransferOffer, Injury, NewsItem } from '@/types/game';
 
 // ============================================================
-// INTERFACES
+// INTERFACES (exportadas para uso externo, mas definidas aqui)
 // ============================================================
-
-/**
- * Item de notícia para o feed do jogo.
- */
-export interface NewsItem {
-  id: string;
-  date: string; // YYYY-MM-DD
-  headline: string;
-  body: string;
-  category: 'TRANSFER' | 'MATCH' | 'INJURY' | 'CONTROVERSY' | 'STREAK';
-  importance: 'LOW' | 'MEDIUM' | 'HIGH';
-}
 
 /**
  * Pergunta de conferência de imprensa com opções de resposta.
@@ -173,7 +161,7 @@ function generateStreakNews(clubName: string, isPositive: boolean): { headline: 
 }
 
 // ============================================================
-// FUNÇÕES PRINCIPAIS
+// FUNÇÕES PRINCIPAIS (exportadas)
 // ============================================================
 
 /**
@@ -200,7 +188,7 @@ export function generateDailyNews(
     const goalDiff = Math.abs(match.homeScore - match.awayScore);
     const isHigh = totalGoals >= 5 || goalDiff >= 3;
 
-    const { headline, body } = generateMatchNews(match);
+    const { headline, body } = generateMatchNews(match, isHigh);
     news.push({
       id: uuidv4(),
       date,
