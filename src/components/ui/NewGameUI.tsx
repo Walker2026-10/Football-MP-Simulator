@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ArrowLeft,
   User,
@@ -13,6 +13,13 @@ import {
   CheckCircle,
   Trophy,
   Sparkles,
+  Shield,
+  Footprints,
+  Crown,
+  Star,
+  Zap,
+  Gamepad2,
+  MoveRight,
 } from 'lucide-react';
 
 interface NewGameUIProps {
@@ -26,11 +33,56 @@ interface NewGameUIProps {
   isLoading?: boolean;
 }
 
+// Mapeamento de bandeiras para emojis (simplificado)
+const flagEmojis: Record<string, string> = {
+  Portugal: '🇵🇹',
+  Brasil: '🇧🇷',
+  Espanha: '🇪🇸',
+  Inglaterra: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  Alemanha: '🇩🇪',
+  França: '🇫🇷',
+  Itália: '🇮🇹',
+  Argentina: '🇦🇷',
+};
+
+// Geração de overall com base na posição (simulação)
+const generateOverall = (position: string): number => {
+  const base = 55 + Math.floor(Math.random() * 15); // 55-70
+  const bonus = {
+    'Guarda-Redes': 5,
+    'Defesa Central': 4,
+    Lateral: 3,
+    Médio: 2,
+    Extremo: 3,
+    Avançado: 5,
+  };
+  return Math.min(75, base + (bonus[position as keyof typeof bonus] || 0));
+};
+
+// Cores de posição para a carta
+const positionColors: Record<string, string> = {
+  'Guarda-Redes': 'from-yellow-400 to-yellow-600',
+  'Defesa Central': 'from-blue-400 to-blue-600',
+  Lateral: 'from-blue-300 to-blue-500',
+  Médio: 'from-green-400 to-green-600',
+  Extremo: 'from-purple-400 to-purple-600',
+  Avançado: 'from-red-400 to-red-600',
+};
+
 export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameUIProps) {
   const [playerName, setPlayerName] = useState('');
   const [position, setPosition] = useState('Médio');
   const [careerMode, setCareerMode] = useState<'player' | 'manager'>('player');
   const [nationality, setNationality] = useState('Portugal');
+
+  // Overall dinâmico (baseado na posição e nome, para dar consistência)
+  const overall = useMemo(() => {
+    if (!playerName) return 0;
+    return generateOverall(position);
+  }, [playerName, position]);
+
+  // Bandeira emoji
+  const flagEmoji = flagEmojis[nationality] || '🌍';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,237 +94,323 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-dark-bg flex items-center justify-center p-4 md:p-8">
-      {/* Background com gradientes e luzes (mesmo estilo do menu) */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card/80 to-dark-bg" />
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '60px 60px',
-          }}
-        />
+    <div className="relative w-screen h-screen overflow-hidden bg-dark-bg select-none">
+      {/* ============================================================
+          FUNDO IMERSIVO (EA FC STYLE)
+      ============================================================ */}
+      <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card/90 to-emerald-900/20" />
+
+      {/* Glow neon */}
+      <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#00ff87]/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#00e5ff]/10 rounded-full blur-3xl animate-pulse delay-700" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff87]/5 rounded-full blur-3xl" />
+
+      {/* Padrão de relvado / linhas diagonais (mais forte) */}
+      <div className="absolute inset-0 opacity-[0.07] pointer-events-none">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="diagonal" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+              <line x1="0" y1="0" x2="60" y2="60" stroke="#ffffff" strokeWidth="1.5" opacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#diagonal)" />
+        </svg>
       </div>
 
-      {/* Conteúdo principal */}
-      <div className="relative z-10 w-full max-w-3xl mx-auto">
-        {/* Glass card principal */}
-        <div className="w-full bg-dark-card/60 backdrop-blur-xl border border-dark-border/60 rounded-3xl shadow-2xl p-6 md:p-10 transition-all hover:shadow-emerald-500/5">
-          {/* Cabeçalho com botão voltar */}
-          <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={onBack}
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition group"
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-              <span className="text-sm font-medium">Voltar ao Menu Principal</span>
-            </button>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Trophy className="w-4 h-4 text-emerald-400" />
-              <span>Nova Carreira</span>
-            </div>
-          </div>
+      {/* Vinheta */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
-          {/* Título */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Começa a tua <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-400">Jornada</span>
+      {/* ============================================================
+          TOP BAR
+      ============================================================ */}
+      <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 md:px-10 py-4 bg-gradient-to-b from-black/50 to-transparent">
+        <button
+          onClick={onBack}
+          className="group flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-medium uppercase tracking-wide">Menu Principal</span>
+        </button>
+        <div className="flex items-center gap-2 text-xs text-gray-500">
+          <Trophy className="w-4 h-4 text-[#00ff87]" />
+          <span className="font-mono text-[#00ff87]/60">CRIAR CARREIRA</span>
+        </div>
+      </header>
+
+      {/* ============================================================
+          CONTEÚDO PRINCIPAL
+      ============================================================ */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 md:px-10 pt-20 pb-8">
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+
+          {/* ============================================================
+              LADO ESQUERDO - SELEÇÃO DE MODO (CARDS GIGANTES)
+          ============================================================ */}
+          <div className="flex-1 w-full lg:w-auto">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tight">
+              <span className="bg-gradient-to-r from-[#00ff87] to-[#00e5ff] bg-clip-text text-transparent">
+                ESCOLHE O TEU CAMINHO
+              </span>
             </h2>
-            <p className="text-gray-400 mt-2 text-sm">
-              Define o teu caminho para a glória
-            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Card Jogador */}
+              <button
+                type="button"
+                onClick={() => setCareerMode('player')}
+                className={`
+                  group relative p-8 rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden
+                  ${careerMode === 'player'
+                    ? 'border-[#00ff87] bg-[#00ff87]/10 shadow-[0_0_40px_rgba(0,255,135,0.15)]'
+                    : 'border-dark-border/40 bg-dark-card/20 backdrop-blur-sm hover:border-[#00ff87]/50 hover:bg-dark-card/30'
+                  }
+                `}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00ff87]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between">
+                    <div className={`
+                      p-4 rounded-xl
+                      ${careerMode === 'player'
+                        ? 'bg-[#00ff87]/20 text-[#00ff87]'
+                        : 'bg-dark-card/50 text-gray-400 group-hover:text-[#00ff87]'
+                      }
+                    `}>
+                      <Footprints className="w-10 h-10" />
+                    </div>
+                    {careerMode === 'player' && (
+                      <CheckCircle className="w-7 h-7 text-[#00ff87] animate-in fade-in zoom-in" />
+                    )}
+                  </div>
+                  <h3 className="text-2xl font-black text-white mt-4 tracking-tight">
+                    CARREIRA DE<br />
+                    <span className="text-[#00ff87]">JOGADOR</span>
+                  </h3>
+                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+                    Cria a tua lenda desde os Sub-15. Evolui, ganha títulos e torna-te uma lenda.
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <span className="text-xs bg-[#00ff87]/10 text-[#00ff87] px-3 py-1 rounded-full">15 anos</span>
+                    <span className="text-xs bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full">Evolução</span>
+                  </div>
+                </div>
+              </button>
+
+              {/* Card Treinador */}
+              <button
+                type="button"
+                onClick={() => setCareerMode('manager')}
+                className={`
+                  group relative p-8 rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden
+                  ${careerMode === 'manager'
+                    ? 'border-[#00e5ff] bg-[#00e5ff]/10 shadow-[0_0_40px_rgba(0,229,255,0.15)]'
+                    : 'border-dark-border/40 bg-dark-card/20 backdrop-blur-sm hover:border-[#00e5ff]/50 hover:bg-dark-card/30'
+                  }
+                `}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00e5ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between">
+                    <div className={`
+                      p-4 rounded-xl
+                      ${careerMode === 'manager'
+                        ? 'bg-[#00e5ff]/20 text-[#00e5ff]'
+                        : 'bg-dark-card/50 text-gray-400 group-hover:text-[#00e5ff]'
+                      }
+                    `}>
+                      <Shield className="w-10 h-10" />
+                    </div>
+                    {careerMode === 'manager' && (
+                      <CheckCircle className="w-7 h-7 text-[#00e5ff] animate-in fade-in zoom-in" />
+                    )}
+                  </div>
+                  <h3 className="text-2xl font-black text-white mt-4 tracking-tight">
+                    CARREIRA DE<br />
+                    <span className="text-[#00e5ff]">TREINADOR</span>
+                  </h3>
+                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+                    Assume o comando técnico do clube. Gerência táticas, mercado e balneário.
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <span className="text-xs bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full">Gestão</span>
+                    <span className="text-xs bg-gold-fc/10 text-gold-fc px-3 py-1 rounded-full">Táticas</span>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Seleção de Modo de Carreira - Cards interativos */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-300">
-                Escolhe o teu caminho
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Card Jogador */}
-                <button
-                  type="button"
-                  onClick={() => setCareerMode('player')}
-                  className={`
-                    relative p-6 rounded-2xl border-2 transition-all duration-300 text-left
-                    ${careerMode === 'player'
-                      ? 'border-emerald-500/70 bg-emerald-500/10 shadow-lg shadow-emerald-500/10'
-                      : 'border-dark-border/50 bg-dark-bg/30 hover:border-emerald-500/30 hover:bg-dark-bg/50'
-                    }
-                  `}
-                >
-                  {careerMode === 'player' && (
-                    <div className="absolute top-3 right-3">
-                      <CheckCircle className="w-5 h-5 text-emerald-400" />
-                    </div>
-                  )}
-                  <div className="flex items-start gap-4">
-                    <div className={`
-                      p-3 rounded-xl
-                      ${careerMode === 'player'
-                        ? 'bg-emerald-500/20 text-emerald-400'
-                        : 'bg-dark-card/50 text-gray-400'
-                      }
-                    `}>
-                      <User className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Jogador</h3>
-                      <p className="text-sm text-gray-400 mt-0.5">
-                        Começa como jovem promessa nos Sub-15 e constrói a tua lenda.
-                      </p>
-                      <div className="flex gap-2 mt-2">
-                        <span className="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full">Sub-15</span>
-                        <span className="text-xs bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full">Evolução</span>
-                      </div>
-                    </div>
-                  </div>
-                </button>
+          {/* ============================================================
+              LADO DIREITO - CARTA DE JOGADOR DINÂMICA
+          ============================================================ */}
+          <div className="w-full lg:w-[340px] flex-shrink-0 flex flex-col gap-6">
+            {/* Preview da Carta EA FC Style */}
+            <div className="relative bg-dark-card/60 backdrop-blur-xl border border-dark-border/40 rounded-3xl p-6 shadow-2xl shadow-black/40 overflow-hidden">
+              {/* Brilho de fundo da carta */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00ff87]/5 via-transparent to-transparent" />
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#00ff87]/10 rounded-full blur-2xl" />
 
-                {/* Card Treinador */}
-                <button
-                  type="button"
-                  onClick={() => setCareerMode('manager')}
-                  className={`
-                    relative p-6 rounded-2xl border-2 transition-all duration-300 text-left
-                    ${careerMode === 'manager'
-                      ? 'border-blue-500/70 bg-blue-500/10 shadow-lg shadow-blue-500/10'
-                      : 'border-dark-border/50 bg-dark-bg/30 hover:border-blue-500/30 hover:bg-dark-bg/50'
-                    }
-                  `}
-                >
-                  {careerMode === 'manager' && (
-                    <div className="absolute top-3 right-3">
-                      <CheckCircle className="w-5 h-5 text-blue-400" />
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-gray-400 tracking-widest">CARTA DE JOGADOR</span>
+                  <span className="text-xs font-mono text-[#00ff87]/60">#2026</span>
+                </div>
+
+                {/* Corpo da carta */}
+                <div className={`
+                  relative rounded-xl p-4 bg-gradient-to-br ${positionColors[position] || 'from-gray-600 to-gray-800'} shadow-lg
+                  ${!playerName ? 'opacity-60' : ''}
+                `}>
+                  <div className="absolute inset-0 bg-black/20 rounded-xl" />
+                  <div className="relative z-10 text-white">
+                    <div className="flex items-center justify-between">
+                      <span className="text-4xl font-black tracking-tight">
+                        {overall || '?'}
+                      </span>
+                      <span className="text-2xl">{flagEmoji}</span>
                     </div>
-                  )}
-                  <div className="flex items-start gap-4">
-                    <div className={`
-                      p-3 rounded-xl
-                      ${careerMode === 'manager'
-                        ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-dark-card/50 text-gray-400'
-                      }
-                    `}>
-                      <Users className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Treinador</h3>
-                      <p className="text-sm text-gray-400 mt-0.5">
-                        Comanda equipas, define táticas e domina o mercado.
-                      </p>
-                      <div className="flex gap-2 mt-2">
-                        <span className="text-xs bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full">Gestão</span>
-                        <span className="text-xs bg-gold-fc/10 text-gold-fc px-2 py-0.5 rounded-full">Táticas</span>
+                    <div className="mt-3">
+                      <div className="text-xs font-bold uppercase tracking-wider text-white/70">
+                        {position || 'POSIÇÃO'}
+                      </div>
+                      <div className="text-xl font-black uppercase tracking-tight leading-tight">
+                        {playerName || 'NOME'}
+                      </div>
+                      <div className="text-sm font-semibold text-white/80">
+                        {nationality || 'NACIONALIDADE'}
                       </div>
                     </div>
+                    {/* Atributos simplificados (EA FC style) */}
+                    <div className="mt-3 grid grid-cols-2 gap-1 text-xs">
+                      <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
+                        <span>Ritmo</span>
+                        <span className="font-bold">{Math.min(99, overall + 10)}</span>
+                      </div>
+                      <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
+                        <span>Remate</span>
+                        <span className="font-bold">{Math.min(99, overall + 5)}</span>
+                      </div>
+                      <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
+                        <span>Passe</span>
+                        <span className="font-bold">{Math.min(99, overall + 8)}</span>
+                      </div>
+                      <div className="flex justify-between bg-black/30 px-2 py-1 rounded">
+                        <span>Defesa</span>
+                        <span className="font-bold">{Math.min(99, overall - 5)}</span>
+                      </div>
+                    </div>
+                    {/* Badge Sub-15 */}
+                    <div className="mt-2 text-[10px] font-bold text-white/50 uppercase tracking-wider">
+                      🔹 PROMESSA SUB-15
+                    </div>
                   </div>
-                </button>
+                </div>
+
+                {/* Rodapé da carta */}
+                <div className="mt-3 flex items-center justify-between text-[10px] text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <Star className="w-3 h-3 text-gold-fc fill-gold-fc/50" />
+                    Potencial: {Math.min(99, overall + 20)}
+                  </span>
+                  <span>Football MP</span>
+                </div>
               </div>
             </div>
 
-            {/* Campos do formulário */}
-            <div className="space-y-4">
-              {/* Nome */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Nome do {careerMode === 'player' ? 'Jogador' : 'Treinador'}
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <input
-                    type="text"
-                    value={playerName}
-                    onChange={(e) => setPlayerName(e.target.value)}
-                    placeholder="Ex: João Silva"
-                    className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
-                    autoFocus
-                  />
-                </div>
-              </div>
+            {/* ============================================================
+                FORMULÁRIO ESTILIZADO (bilhete de identidade)
+            ============================================================ */}
+            <div className="bg-dark-card/40 backdrop-blur-sm border border-dark-border/30 rounded-2xl p-6 shadow-lg">
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                Dados do Jogador
+              </h4>
 
-              {/* Nacionalidade */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Nacionalidade
-                </label>
-                <div className="relative">
-                  <Flag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <select
-                    value={nationality}
-                    onChange={(e) => setNationality(e.target.value)}
-                    className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-3 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
-                  >
-                    {['Portugal', 'Brasil', 'Espanha', 'Inglaterra', 'Alemanha', 'França', 'Itália', 'Argentina'].map(n => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Posição (apenas para modo jogador) */}
-              {careerMode === 'player' && (
+              <div className="space-y-4">
+                {/* Nome */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                    Posição em Campo
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+                    Nome Completo
                   </label>
                   <div className="relative">
-                    <Target className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <input
+                      type="text"
+                      value={playerName}
+                      onChange={(e) => setPlayerName(e.target.value.toUpperCase())}
+                      placeholder="EX: JOÃO SILVA"
+                      className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-[#00ff87]/50 focus:border-transparent transition-all"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                {/* Nacionalidade */}
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+                    Nacionalidade
+                  </label>
+                  <div className="relative">
+                    <Flag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                     <select
-                      value={position}
-                      onChange={(e) => setPosition(e.target.value)}
-                      className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-3 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent transition-all"
+                      value={nationality}
+                      onChange={(e) => setNationality(e.target.value)}
+                      className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider appearance-none focus:outline-none focus:ring-2 focus:ring-[#00ff87]/50 focus:border-transparent transition-all"
                     >
-                      {['Guarda-Redes', 'Defesa Central', 'Lateral', 'Médio', 'Extremo', 'Avançado'].map(p => (
-                        <option key={p} value={p}>{p}</option>
+                      {Object.keys(flagEmojis).map(n => (
+                        <option key={n} value={n}>{flagEmojis[n]} {n}</option>
                       ))}
                     </select>
                   </div>
                 </div>
-              )}
+
+                {/* Posição */}
+                {careerMode === 'player' && (
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
+                      Posição
+                    </label>
+                    <div className="relative">
+                      <Target className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <select
+                        value={position}
+                        onChange={(e) => setPosition(e.target.value)}
+                        className="w-full bg-dark-bg/70 border border-dark-border rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider appearance-none focus:outline-none focus:ring-2 focus:ring-[#00ff87]/50 focus:border-transparent transition-all"
+                      >
+                        {['Guarda-Redes', 'Defesa Central', 'Lateral', 'Médio', 'Extremo', 'Avançado'].map(p => (
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Botão Avançar */}
-            <button
-              type="submit"
-              disabled={isLoading || !playerName.trim()}
-              className={`
-                w-full py-4 px-6 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-200
-                ${!isLoading && playerName.trim()
-                  ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02]'
-                  : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
-                }
-              `}
-            >
-              {isLoading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              ) : (
-                <>
-                  <Play className="w-5 h-5 fill-current" />
-                  Avançar para o Jogo
-                </>
-              )}
-            </button>
-
-            {/* Rodapé com dica */}
-            <div className="text-center text-xs text-gray-500 pt-2">
-              <Sparkles className="w-3 h-3 inline mr-1 text-emerald-400" />
-              Inicia agora a tua história — cada lenda começa com um primeiro passo.
+            {/* Botão AVANÇAR (canto inferior direito) */}
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isLoading || !playerName.trim()}
+                className={`
+                  group flex items-center gap-3 px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300
+                  ${!isLoading && playerName.trim()
+                    ? 'bg-[#00ff87] text-black hover:brightness-110 hover:scale-[1.02] shadow-[0_0_40px_rgba(0,255,135,0.3)]'
+                    : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
+                  }
+                `}
+              >
+                {isLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-black/30 border-t-transparent" />
+                ) : (
+                  <>
+                    Avançar para o Campo
+                    <MoveRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
             </div>
-          </form>
-        </div>
-
-        {/* Versão flutuante */}
-        <div className="absolute bottom-4 right-4 text-[10px] text-gray-600/50 md:text-xs select-none">
-          Football MP Simulator • v1.0
+          </div>
         </div>
       </div>
     </div>
