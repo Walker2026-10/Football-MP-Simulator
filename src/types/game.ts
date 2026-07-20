@@ -51,6 +51,15 @@ export interface Player {
   stats: PlayerStats;
   potential: number;      // 1-99 – potencial máximo que pode atingir
   growthRate: number;     // 0.5 a 2.0 – fator de evolução por temporada
+  // Campos opcionais para integração com motores
+  fitness?: number;       // 0-100
+  injury?: {
+    type: string;
+    severity: 'Leve' | 'Moderada' | 'Grave';
+    durationDays: number;
+    fitnessImpact: number;
+  } | null;
+  honors?: { name: string; season: string; type: 'individual' | 'team' }[];
 }
 
 export interface Club {
@@ -60,11 +69,14 @@ export interface Club {
   leagueId: string;
   budget: number;
   stadiumName: string;
-  mainSquad: Player[];        // jogadores da equipa principal
-  sub15Squad: Player[];       // jogadores Sub-15
+  mainSquad: Player[];
+  sub15Squad: Player[];
   reputation: number;         // 1-100
   primaryColor: string;       // código hex
   secondaryColor: string;     // código hex
+  // Campos opcionais para motores
+  manager?: any;
+  recentResults?: string[];
 }
 
 export interface Sub15Club {
@@ -120,4 +132,51 @@ export interface SaveState {
   userPlayer: Player | null;  // só preenchido no modo Jogador
   userClubId: string | null;  // clube que o utilizador gere (modo Treinador) ou onde o jogador está (modo Jogador)
   logs: string[];           // notícias / alertas do mundo
+}
+
+// ============================================================
+// INTERFACES ADICIONAIS PARA COMPETIÇÕES, MEDIA E HISTÓRICO
+// ============================================================
+
+/**
+ * Entrada na tabela classificativa de uma liga.
+ */
+export interface LeagueTableEntry {
+  rank: number;             // posição na tabela
+  clubId: string;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;   // goalsFor - goalsAgainst
+  points: number;
+}
+
+/**
+ * Representa um jogo de eliminatória (Taça).
+ */
+export interface CupFixture {
+  id: string;
+  roundName: string;        // ex: '1/16', 'Oitavos', 'Quartos', 'Meias', 'Final'
+  homeClubId: string;
+  awayClubId: string;
+  homeGoals: number | null; // null se ainda não jogado
+  awayGoals: number | null;
+  penaltyWinnerId: string | null; // ID do clube vencedor nos penáltis (se aplicável)
+  isCompleted: boolean;
+  matchDate: string;        // formato YYYY-MM-DD
+}
+
+/**
+ * Item de notícia para o feed do jogo.
+ */
+export interface NewsItem {
+  id: string;
+  date: string; // YYYY-MM-DD
+  headline: string;
+  body: string;
+  category: 'TRANSFER' | 'MATCH' | 'INJURY' | 'CONTROVERSY' | 'STREAK';
+  importance: 'LOW' | 'MEDIUM' | 'HIGH';
 }
