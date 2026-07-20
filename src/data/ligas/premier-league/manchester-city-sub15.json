@@ -1,0 +1,242 @@
+{
+  "id": "mci",
+  "name": "Manchester City Sub-15",
+  "shortName": "Man City U15",
+  "leagueId": "pl",
+  "budget": 1000000,
+  "stadiumName": "City Football Academy",
+  "mainSquad": [],
+  "sub15Squad": [
+    {
+      "id": "mci-u15-harrison",
+      "name": "Ethan Harrison",
+      "nationality": "Inglaterra",
+      "age": 15,
+      "position": "Guarda-Redes",
+      "overall": 55,
+      "attributes": {
+        "pace": 50,
+        "shooting": 20,
+        "passing": 45,
+        "dribbling": 35,
+        "defending": 15,
+        "physical": 50
+      },
+      "clubId": "mci",
+      "clubName": "Manchester City Sub-15",
+      "isSub15": true,
+      "marketValue": 150000,
+      "salary": 30000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 80,
+        "happiness": 75,
+        "morale": "Normal",
+        "lifestyleLevel": 1,
+        "bankBalance": 2000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 78,
+      "growthRate": 1.4
+    },
+    {
+      "id": "mci-u15-davies",
+      "name": "Alfie Davies",
+      "nationality": "Inglaterra",
+      "age": 15,
+      "position": "Defesa Central",
+      "overall": 58,
+      "attributes": {
+        "pace": 62,
+        "shooting": 25,
+        "passing": 48,
+        "dribbling": 50,
+        "defending": 68,
+        "physical": 60
+      },
+      "clubId": "mci",
+      "clubName": "Manchester City Sub-15",
+      "isSub15": true,
+      "marketValue": 180000,
+      "salary": 35000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 82,
+        "happiness": 78,
+        "morale": "Boa",
+        "lifestyleLevel": 1,
+        "bankBalance": 2500,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 82,
+      "growthRate": 1.5
+    },
+    {
+      "id": "mci-u15-thompson",
+      "name": "Liam Thompson",
+      "nationality": "Inglaterra",
+      "age": 15,
+      "position": "Lateral",
+      "overall": 57,
+      "attributes": {
+        "pace": 70,
+        "shooting": 28,
+        "passing": 52,
+        "dribbling": 58,
+        "defending": 60,
+        "physical": 55
+      },
+      "clubId": "mci",
+      "clubName": "Manchester City Sub-15",
+      "isSub15": true,
+      "marketValue": 160000,
+      "salary": 30000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 80,
+        "happiness": 72,
+        "morale": "Normal",
+        "lifestyleLevel": 1,
+        "bankBalance": 1800,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 80,
+      "growthRate": 1.5
+    },
+    {
+      "id": "mci-u15-barnes",
+      "name": "Noah Barnes",
+      "nationality": "Inglaterra",
+      "age": 15,
+      "position": "Médio",
+      "overall": 60,
+      "attributes": {
+        "pace": 66,
+        "shooting": 55,
+        "passing": 68,
+        "dribbling": 65,
+        "defending": 40,
+        "physical": 52
+      },
+      "clubId": "mci",
+      "clubName": "Manchester City Sub-15",
+      "isSub15": true,
+      "marketValue": 200000,
+      "salary": 40000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 84,
+        "happiness": 80,
+        "morale": "Boa",
+        "lifestyleLevel": 1,
+        "bankBalance": 3000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 86,
+      "growthRate": 1.6
+    },
+    {
+      "id": "mci-u15-fletcher",
+      "name": "Harvey Fletcher",
+      "nationality": "Inglaterra",
+      "age": 15,
+      "position": "Extremo",
+      "overall": 59,
+      "attributes": {
+        "pace": 76,
+        "shooting": 50,
+        "passing": 56,
+        "dribbling": 68,
+        "defending": 28,
+        "physical": 48
+      },
+      "clubId": "mci",
+      "clubName": "Manchester City Sub-15",
+      "isSub15": true,
+      "marketValue": 170000,
+      "salary": 32000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 78,
+        "happiness": 74,
+        "morale": "Normal",
+        "lifestyleLevel": 1,
+        "bankBalance": 2200,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 84,
+      "growthRate": 1.6
+    },
+    {
+      "id": "mci-u15-ward",
+      "name": "Caleb Ward",
+      "nationality": "Inglaterra",
+      "age": 15,
+      "position": "Avançado",
+      "overall": 62,
+      "attributes": {
+        "pace": 72,
+        "shooting": 65,
+        "passing": 45,
+        "dribbling": 60,
+        "defending": 22,
+        "physical": 58
+      },
+      "clubId": "mci",
+      "clubName": "Manchester City Sub-15",
+      "isSub15": true,
+      "marketValue": 220000,
+      "salary": 45000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 86,
+        "happiness": 82,
+        "morale": "Boa",
+        "lifestyleLevel": 1,
+        "bankBalance": 3500,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 88,
+      "growthRate": 1.7
+    }
+  ],
+  "reputation": 70,
+  "primaryColor": "#6CABDD",
+  "secondaryColor": "#1C2C5B"
+}
