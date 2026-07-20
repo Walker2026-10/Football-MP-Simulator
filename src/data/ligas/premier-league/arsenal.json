@@ -1,0 +1,736 @@
+{
+  "id": "ars",
+  "name": "Arsenal",
+  "shortName": "Arsenal",
+  "leagueId": "pl",
+  "budget": 220000000,
+  "stadiumName": "Emirates Stadium",
+  "mainSquad": [
+    {
+      "id": "ars-raya",
+      "name": "David Raya",
+      "nationality": "Espanha",
+      "age": 31,
+      "position": "Guarda-Redes",
+      "overall": 85,
+      "attributes": {
+        "pace": 62,
+        "shooting": 35,
+        "passing": 75,
+        "dribbling": 50,
+        "defending": 18,
+        "physical": 70
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 35000000,
+      "salary": 10000000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 82,
+        "happiness": 84,
+        "morale": "Boa",
+        "lifestyleLevel": 3,
+        "bankBalance": 15000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 85,
+      "growthRate": 0.6
+    },
+    {
+      "id": "ars-ramsdale",
+      "name": "Aaron Ramsdale",
+      "nationality": "Inglaterra",
+      "age": 28,
+      "position": "Guarda-Redes",
+      "overall": 80,
+      "attributes": {
+        "pace": 58,
+        "shooting": 30,
+        "passing": 68,
+        "dribbling": 45,
+        "defending": 15,
+        "physical": 66
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 18000000,
+      "salary": 7000000,
+      "contractYears": 2,
+      "sims": {
+        "energy": 76,
+        "happiness": 72,
+        "morale": "Normal",
+        "lifestyleLevel": 2,
+        "bankBalance": 8000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 80,
+      "growthRate": 0.7
+    },
+    {
+      "id": "ars-white",
+      "name": "Ben White",
+      "nationality": "Inglaterra",
+      "age": 29,
+      "position": "Lateral",
+      "overall": 82,
+      "attributes": {
+        "pace": 76,
+        "shooting": 50,
+        "passing": 72,
+        "dribbling": 68,
+        "defending": 80,
+        "physical": 72
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 40000000,
+      "salary": 10000000,
+      "contractYears": 4,
+      "sims": {
+        "energy": 80,
+        "happiness": 78,
+        "morale": "Boa",
+        "lifestyleLevel": 2,
+        "bankBalance": 12000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 82,
+      "growthRate": 0.8
+    },
+    {
+      "id": "ars-saliba",
+      "name": "William Saliba",
+      "nationality": "França",
+      "age": 25,
+      "position": "Defesa Central",
+      "overall": 86,
+      "attributes": {
+        "pace": 78,
+        "shooting": 30,
+        "passing": 68,
+        "dribbling": 62,
+        "defending": 88,
+        "physical": 84
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 85000000,
+      "salary": 12000000,
+      "contractYears": 5,
+      "sims": {
+        "energy": 84,
+        "happiness": 86,
+        "morale": "Excelente",
+        "lifestyleLevel": 3,
+        "bankBalance": 20000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 90,
+      "growthRate": 1.2
+    },
+    {
+      "id": "ars-gabriel",
+      "name": "Gabriel Magalhães",
+      "nationality": "Brasil",
+      "age": 29,
+      "position": "Defesa Central",
+      "overall": 84,
+      "attributes": {
+        "pace": 72,
+        "shooting": 35,
+        "passing": 60,
+        "dribbling": 55,
+        "defending": 86,
+        "physical": 82
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 50000000,
+      "salary": 10000000,
+      "contractYears": 4,
+      "sims": {
+        "energy": 78,
+        "happiness": 80,
+        "morale": "Boa",
+        "lifestyleLevel": 2,
+        "bankBalance": 14000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 84,
+      "growthRate": 0.8
+    },
+    {
+      "id": "ars-timber",
+      "name": "Jurriën Timber",
+      "nationality": "Holanda",
+      "age": 25,
+      "position": "Defesa Central",
+      "overall": 81,
+      "attributes": {
+        "pace": 80,
+        "shooting": 40,
+        "passing": 68,
+        "dribbling": 70,
+        "defending": 80,
+        "physical": 76
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 45000000,
+      "salary": 8000000,
+      "contractYears": 4,
+      "sims": {
+        "energy": 76,
+        "happiness": 74,
+        "morale": "Normal",
+        "lifestyleLevel": 2,
+        "bankBalance": 8000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 85,
+      "growthRate": 1.2
+    },
+    {
+      "id": "ars-zinchenko",
+      "name": "Oleksandr Zinchenko",
+      "nationality": "Ucrânia",
+      "age": 30,
+      "position": "Lateral",
+      "overall": 79,
+      "attributes": {
+        "pace": 72,
+        "shooting": 55,
+        "passing": 78,
+        "dribbling": 74,
+        "defending": 70,
+        "physical": 68
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 30000000,
+      "salary": 9000000,
+      "contractYears": 2,
+      "sims": {
+        "energy": 72,
+        "happiness": 70,
+        "morale": "Normal",
+        "lifestyleLevel": 3,
+        "bankBalance": 15000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 79,
+      "growthRate": 0.7
+    },
+    {
+      "id": "ars-tomiyasu",
+      "name": "Takehiro Tomiyasu",
+      "nationality": "Japão",
+      "age": 28,
+      "position": "Lateral",
+      "overall": 77,
+      "attributes": {
+        "pace": 74,
+        "shooting": 40,
+        "passing": 62,
+        "dribbling": 60,
+        "defending": 78,
+        "physical": 76
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 20000000,
+      "salary": 6000000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 74,
+        "happiness": 72,
+        "morale": "Normal",
+        "lifestyleLevel": 2,
+        "bankBalance": 7000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 77,
+      "growthRate": 0.8
+    },
+    {
+      "id": "ars-odegaard",
+      "name": "Martin Ødegaard",
+      "nationality": "Noruega",
+      "age": 28,
+      "position": "Médio",
+      "overall": 87,
+      "attributes": {
+        "pace": 74,
+        "shooting": 78,
+        "passing": 89,
+        "dribbling": 87,
+        "defending": 50,
+        "physical": 68
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 100000000,
+      "salary": 16000000,
+      "contractYears": 4,
+      "sims": {
+        "energy": 82,
+        "happiness": 84,
+        "morale": "Boa",
+        "lifestyleLevel": 3,
+        "bankBalance": 22000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 88,
+      "growthRate": 0.9
+    },
+    {
+      "id": "ars-rice",
+      "name": "Declan Rice",
+      "nationality": "Inglaterra",
+      "age": 27,
+      "position": "Médio",
+      "overall": 86,
+      "attributes": {
+        "pace": 72,
+        "shooting": 65,
+        "passing": 80,
+        "dribbling": 76,
+        "defending": 85,
+        "physical": 86
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 110000000,
+      "salary": 18000000,
+      "contractYears": 5,
+      "sims": {
+        "energy": 84,
+        "happiness": 86,
+        "morale": "Excelente",
+        "lifestyleLevel": 3,
+        "bankBalance": 20000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 88,
+      "growthRate": 1.0
+    },
+    {
+      "id": "ars-partey",
+      "name": "Thomas Partey",
+      "nationality": "Gana",
+      "age": 33,
+      "position": "Médio",
+      "overall": 80,
+      "attributes": {
+        "pace": 68,
+        "shooting": 65,
+        "passing": 76,
+        "dribbling": 72,
+        "defending": 78,
+        "physical": 80
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 20000000,
+      "salary": 10000000,
+      "contractYears": 1,
+      "sims": {
+        "energy": 70,
+        "happiness": 68,
+        "morale": "Normal",
+        "lifestyleLevel": 2,
+        "bankBalance": 12000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 80,
+      "growthRate": 0.6
+    },
+    {
+      "id": "ars-jorginho",
+      "name": "Jorginho",
+      "nationality": "Itália",
+      "age": 35,
+      "position": "Médio",
+      "overall": 78,
+      "attributes": {
+        "pace": 58,
+        "shooting": 60,
+        "passing": 85,
+        "dribbling": 70,
+        "defending": 72,
+        "physical": 64
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 8000000,
+      "salary": 6000000,
+      "contractYears": 1,
+      "sims": {
+        "energy": 66,
+        "happiness": 70,
+        "morale": "Normal",
+        "lifestyleLevel": 3,
+        "bankBalance": 18000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 78,
+      "growthRate": 0.5
+    },
+    {
+      "id": "ars-havertz",
+      "name": "Kai Havertz",
+      "nationality": "Alemanha",
+      "age": 27,
+      "position": "Médio",
+      "overall": 82,
+      "attributes": {
+        "pace": 76,
+        "shooting": 80,
+        "passing": 78,
+        "dribbling": 82,
+        "defending": 45,
+        "physical": 72
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 65000000,
+      "salary": 14000000,
+      "contractYears": 4,
+      "sims": {
+        "energy": 78,
+        "happiness": 76,
+        "morale": "Normal",
+        "lifestyleLevel": 3,
+        "bankBalance": 16000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 85,
+      "growthRate": 1.0
+    },
+    {
+      "id": "ars-vieira",
+      "name": "Fábio Vieira",
+      "nationality": "Portugal",
+      "age": 26,
+      "position": "Médio",
+      "overall": 76,
+      "attributes": {
+        "pace": 72,
+        "shooting": 72,
+        "passing": 78,
+        "dribbling": 76,
+        "defending": 40,
+        "physical": 60
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 25000000,
+      "salary": 5000000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 76,
+        "happiness": 72,
+        "morale": "Normal",
+        "lifestyleLevel": 1,
+        "bankBalance": 5000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 80,
+      "growthRate": 1.0
+    },
+    {
+      "id": "ars-saka",
+      "name": "Bukayo Saka",
+      "nationality": "Inglaterra",
+      "age": 25,
+      "position": "Extremo",
+      "overall": 88,
+      "attributes": {
+        "pace": 90,
+        "shooting": 80,
+        "passing": 84,
+        "dribbling": 89,
+        "defending": 55,
+        "physical": 74
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 140000000,
+      "salary": 18000000,
+      "contractYears": 5,
+      "sims": {
+        "energy": 88,
+        "happiness": 92,
+        "morale": "Excelente",
+        "lifestyleLevel": 4,
+        "bankBalance": 28000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 92,
+      "growthRate": 1.1
+    },
+    {
+      "id": "ars-martinelli",
+      "name": "Gabriel Martinelli",
+      "nationality": "Brasil",
+      "age": 25,
+      "position": "Extremo",
+      "overall": 83,
+      "attributes": {
+        "pace": 88,
+        "shooting": 78,
+        "passing": 72,
+        "dribbling": 82,
+        "defending": 30,
+        "physical": 70
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 60000000,
+      "salary": 12000000,
+      "contractYears": 4,
+      "sims": {
+        "energy": 80,
+        "happiness": 78,
+        "morale": "Boa",
+        "lifestyleLevel": 2,
+        "bankBalance": 10000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 85,
+      "growthRate": 1.0
+    },
+    {
+      "id": "ars-jesus",
+      "name": "Gabriel Jesus",
+      "nationality": "Brasil",
+      "age": 29,
+      "position": "Avançado",
+      "overall": 82,
+      "attributes": {
+        "pace": 84,
+        "shooting": 82,
+        "passing": 72,
+        "dribbling": 84,
+        "defending": 40,
+        "physical": 78
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 55000000,
+      "salary": 13000000,
+      "contractYears": 2,
+      "sims": {
+        "energy": 76,
+        "happiness": 74,
+        "morale": "Normal",
+        "lifestyleLevel": 2,
+        "bankBalance": 14000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 82,
+      "growthRate": 0.8
+    },
+    {
+      "id": "ars-trossard",
+      "name": "Leandro Trossard",
+      "nationality": "Bélgica",
+      "age": 32,
+      "position": "Extremo",
+      "overall": 81,
+      "attributes": {
+        "pace": 78,
+        "shooting": 76,
+        "passing": 74,
+        "dribbling": 80,
+        "defending": 35,
+        "physical": 66
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 30000000,
+      "salary": 9000000,
+      "contractYears": 2,
+      "sims": {
+        "energy": 72,
+        "happiness": 70,
+        "morale": "Normal",
+        "lifestyleLevel": 2,
+        "bankBalance": 10000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 81,
+      "growthRate": 0.7
+    },
+    {
+      "id": "ars-nketiah",
+      "name": "Eddie Nketiah",
+      "nationality": "Inglaterra",
+      "age": 27,
+      "position": "Avançado",
+      "overall": 78,
+      "attributes": {
+        "pace": 80,
+        "shooting": 78,
+        "passing": 60,
+        "dribbling": 72,
+        "defending": 30,
+        "physical": 68
+      },
+      "clubId": "ars",
+      "clubName": "Arsenal",
+      "isSub15": false,
+      "marketValue": 25000000,
+      "salary": 7000000,
+      "contractYears": 3,
+      "sims": {
+        "energy": 74,
+        "happiness": 70,
+        "morale": "Normal",
+        "lifestyleLevel": 1,
+        "bankBalance": 6000000,
+        "relationships": []
+      },
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "matchesPlayed": 0,
+        "averageRating": 0
+      },
+      "potential": 80,
+      "growthRate": 0.9
+    }
+  ],
+  "sub15Squad": [],
+  "reputation": 83,
+  "primaryColor": "#EF0107",
+  "secondaryColor": "#FFFFFF"
+    }
