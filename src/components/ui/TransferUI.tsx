@@ -32,6 +32,7 @@ import {
   TrendingUp,
   Zap,
   Award,
+  Inbox,
 } from 'lucide-react';
 import { Player, Club } from '@/types/game';
 
@@ -323,7 +324,7 @@ export function TransferUI() {
         {[
           { id: 'market', label: 'Mercado', icon: <Users className="w-4 h-4" /> },
           { id: 'scouting', label: 'Scouting', icon: <Eye className="w-4 h-4" /> },
-          { id: 'offers', label: 'Propostas Recebidas', icon: <FileText className="w-4 h-4" /> },
+          { id: 'offers', label: 'Propostas Recebidas', icon: <Inbox className="w-4 h-4" /> },
         ].map(tab => (
           <button
             key={tab.id}
