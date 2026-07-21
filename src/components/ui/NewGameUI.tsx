@@ -14,7 +14,6 @@ import {
   Footprints,
   Star,
   MoveRight,
-  Gamepad2,
   Sparkles,
 } from 'lucide-react';
 
@@ -28,10 +27,6 @@ interface NewGameUIProps {
   ) => void;
   isLoading?: boolean;
 }
-
-// ============================================================
-// DADOS
-// ============================================================
 
 const flagEmojis: Record<string, string> = {
   Portugal: '🇵🇹',
@@ -52,10 +47,6 @@ const positionColors: Record<string, string> = {
   Extremo: 'from-purple-400 to-purple-600',
   Avançado: 'from-red-400 to-red-600',
 };
-
-// ============================================================
-// COMPONENTE PRINCIPAL
-// ============================================================
 
 export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameUIProps) {
   const [playerName, setPlayerName] = useState('');
@@ -90,16 +81,11 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-zinc-950 select-none">
-
-      {/* Fundo com gradiente estilo FIFA */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-800" />
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-purple-500/5 rounded-full blur-3xl" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_30%,_black_100%)]" />
 
-      {/* ============================================================
-          TOP BAR
-      ============================================================ */}
       <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 md:px-10 py-4 bg-gradient-to-b from-black/80 to-transparent">
         <button onClick={onBack} className="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -111,13 +97,8 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
         </div>
       </header>
 
-      {/* ============================================================
-          CONTEÚDO
-      ============================================================ */}
       <div className="absolute inset-0 z-10 flex items-center justify-center px-4 md:px-8 pt-16 pb-12">
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10">
-
-          {/* COLUNA ESQUERDA (3/5) - CARDS DE MODO */}
           <div className="lg:col-span-3 space-y-6">
             <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
               <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
@@ -126,11 +107,14 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
             </h2>
 
             <div className="grid grid-cols-1 gap-4">
-              {/* Card Jogador */}
               <button
                 type="button"
                 onClick={() => setCareerMode('player')}
-                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 text-left ${careerMode === 'player' ? 'border-blue-400 bg-blue-500/10 shadow-lg shadow-blue-500/20' : 'border-white/10 bg-white/5 hover:border-blue-400/50 hover:bg-white/10'}`}
+                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
+                  careerMode === 'player'
+                    ? 'border-blue-400 bg-blue-500/10 shadow-lg shadow-blue-500/20'
+                    : 'border-white/10 bg-white/5 hover:border-blue-400/50 hover:bg-white/10'
+                }`}
               >
                 <div className="flex items-start gap-4">
                   <div className={`p-3 rounded-xl ${careerMode === 'player' ? 'bg-blue-500/20 text-blue-400' : 'bg-white/5 text-gray-400'}`}>
@@ -148,11 +132,14 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                 </div>
               </button>
 
-              {/* Card Treinador */}
               <button
                 type="button"
                 onClick={() => setCareerMode('manager')}
-                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 text-left ${careerMode === 'manager' ? 'border-purple-400 bg-purple-500/10 shadow-lg shadow-purple-500/20' : 'border-white/10 bg-white/5 hover:border-purple-400/50 hover:bg-white/10'}`}
+                className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
+                  careerMode === 'manager'
+                    ? 'border-purple-400 bg-purple-500/10 shadow-lg shadow-purple-500/20'
+                    : 'border-white/10 bg-white/5 hover:border-purple-400/50 hover:bg-white/10'
+                }`}
               >
                 <div className="flex items-start gap-4">
                   <div className={`p-3 rounded-xl ${careerMode === 'manager' ? 'bg-purple-500/20 text-purple-400' : 'bg-white/5 text-gray-400'}`}>
@@ -172,9 +159,7 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
             </div>
           </div>
 
-          {/* COLUNA DIREITA (2/5) - CARTA + FORMULÁRIO */}
           <div className="lg:col-span-2 space-y-5">
-            {/* Carta do jogador (estilo FIFA) */}
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">CARTA DE JOGADOR</span>
@@ -221,7 +206,6 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
               </div>
             </div>
 
-            {/* Formulário */}
             <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome</label>
@@ -246,7 +230,11 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                     onChange={(e) => setNationality(e.target.value)}
                     className="w-full bg-black/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-transparent transition-all"
                   >
-                    {Object.keys(flagEmojis).map(n => <option key={n} value={n}>{flagEmojis[n]} {n}</option>)}
+                    {Object.keys(flagEmojis).map((n) => (
+                      <option key={n} value={n}>
+                        {flagEmojis[n]} {n}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -260,8 +248,10 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
                       onChange={(e) => setPosition(e.target.value)}
                       className="w-full bg-black/50 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white font-bold text-sm uppercase tracking-wider appearance-none focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-transparent transition-all"
                     >
-                      {['Guarda-Redes', 'Defesa Central', 'Lateral', 'Médio', 'Extremo', 'Avançado'].map(p => (
-                        <option key={p} value={p}>{p}</option>
+                      {['Guarda-Redes', 'Defesa Central', 'Lateral', 'Médio', 'Extremo', 'Avançado'].map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -270,7 +260,11 @@ export function NewGameUI({ onBack, onStartCareer, isLoading = false }: NewGameU
               <button
                 type="submit"
                 disabled={isLoading || !playerName.trim()}
-                className={`w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300 ${!isLoading && playerName.trim() ? 'bg-blue-500 text-black hover:bg-blue-400 shadow-lg shadow-blue-500/30 hover:scale-[1.02]' : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'}`}
+                className={`w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300 ${
+                  !isLoading && playerName.trim()
+                    ? 'bg-blue-500 text-black hover:bg-blue-400 shadow-lg shadow-blue-500/30 hover:scale-[1.02]'
+                    : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
+                }`}
               >
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-2 border-black/30 border-t-transparent" />
