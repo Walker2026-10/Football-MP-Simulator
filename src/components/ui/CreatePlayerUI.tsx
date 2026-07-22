@@ -437,4 +437,17 @@ export function CreatePlayerUI({ onBack, onSubmit, isLoading = false }: CreatePl
                 className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300 bg-gradient-to-r from-amber-400 to-yellow-500 text-black hover:brightness-110 shadow-lg shadow-amber-500/30 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
-            
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-black/30 border-t-transparent" />
+                ) : (
+                  <>
+                    CRIAR LENDA <MoveRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
